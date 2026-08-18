@@ -7,19 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A42102FE2C625F72005580E9 /* AliasManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42102FD2C625F72005580E9 /* AliasManagerApp.swift */; };
+		A42102FE2C625F72005580E9 /* DotBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42102FD2C625F72005580E9 /* DotBuddyApp.swift */; };
 		A42103002C625F72005580E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42102FF2C625F72005580E9 /* ContentView.swift */; };
 		A42103022C625F73005580E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A42103012C625F73005580E9 /* Assets.xcassets */; };
 		A42103052C625F73005580E9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A42103042C625F73005580E9 /* Preview Assets.xcassets */; };
+		A421030C2C625F74005580E9 /* Alias.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421030D2C625F74005580E9 /* Alias.swift */; };
+		A421030E2C625F74005580E9 /* AliasFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421030F2C625F74005580E9 /* AliasFileManager.swift */; };
+		A42103102C625F74005580E9 /* AliasViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103112C625F74005580E9 /* AliasViewModel.swift */; };
+		A42103122C625F74005580E9 /* AliasFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103132C625F74005580E9 /* AliasFormView.swift */; };
+		A42103142C625F74005580E9 /* AliasRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103152C625F74005580E9 /* AliasRowView.swift */; };
+		A42103162C625F75005580E9 /* EnvVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103172C625F75005580E9 /* EnvVariable.swift */; };
+		A42103182C625F75005580E9 /* EnvFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103192C625F75005580E9 /* EnvFileManager.swift */; };
+		A421031A2C625F75005580E9 /* EnvViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421031B2C625F75005580E9 /* EnvViewModel.swift */; };
+		A421031C2C625F75005580E9 /* EnvFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421031D2C625F75005580E9 /* EnvFormView.swift */; };
+		A421031E2C625F75005580E9 /* EnvRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421031F2C625F75005580E9 /* EnvRowView.swift */; };
+		A42103202C625F75005580E9 /* EnvContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103212C625F75005580E9 /* EnvContentView.swift */; };
+		A42103222C625F76005580E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103232C625F76005580E9 /* HomeView.swift */; };
+		A42103242C625F77005580E9 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103252C625F77005580E9 /* DeleteButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A42102FA2C625F72005580E9 /* AliasManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AliasManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A42102FD2C625F72005580E9 /* AliasManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasManagerApp.swift; sourceTree = "<group>"; };
+		A42102FA2C625F72005580E9 /* DotBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DotBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A42102FD2C625F72005580E9 /* DotBuddyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotBuddyApp.swift; sourceTree = "<group>"; };
 		A42102FF2C625F72005580E9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A42103012C625F73005580E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A42103042C625F73005580E9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A42103062C625F73005580E9 /* AliasManager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AliasManager.entitlements; sourceTree = "<group>"; };
+		A421030D2C625F74005580E9 /* Alias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alias.swift; sourceTree = "<group>"; };
+		A421030F2C625F74005580E9 /* AliasFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasFileManager.swift; sourceTree = "<group>"; };
+		A42103112C625F74005580E9 /* AliasViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasViewModel.swift; sourceTree = "<group>"; };
+		A42103132C625F74005580E9 /* AliasFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasFormView.swift; sourceTree = "<group>"; };
+		A42103152C625F74005580E9 /* AliasRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasRowView.swift; sourceTree = "<group>"; };
+		A42103172C625F75005580E9 /* EnvVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvVariable.swift; sourceTree = "<group>"; };
+		A42103192C625F75005580E9 /* EnvFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFileManager.swift; sourceTree = "<group>"; };
+		A421031B2C625F75005580E9 /* EnvViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvViewModel.swift; sourceTree = "<group>"; };
+		A421031D2C625F75005580E9 /* EnvFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFormView.swift; sourceTree = "<group>"; };
+		A421031F2C625F75005580E9 /* EnvRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvRowView.swift; sourceTree = "<group>"; };
+		A42103212C625F75005580E9 /* EnvContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvContentView.swift; sourceTree = "<group>"; };
+		A42103232C625F76005580E9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A42103252C625F77005580E9 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +70,7 @@
 		A42102FB2C625F72005580E9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A42102FA2C625F72005580E9 /* AliasManager.app */,
+				A42102FA2C625F72005580E9 /* DotBuddy.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -52,8 +78,21 @@
 		A42102FC2C625F72005580E9 /* AliasManager */ = {
 			isa = PBXGroup;
 			children = (
-				A42102FD2C625F72005580E9 /* AliasManagerApp.swift */,
+				A42102FD2C625F72005580E9 /* DotBuddyApp.swift */,
+				A421030D2C625F74005580E9 /* Alias.swift */,
+				A421030F2C625F74005580E9 /* AliasFileManager.swift */,
+				A42103112C625F74005580E9 /* AliasViewModel.swift */,
 				A42102FF2C625F72005580E9 /* ContentView.swift */,
+				A42103132C625F74005580E9 /* AliasFormView.swift */,
+				A42103152C625F74005580E9 /* AliasRowView.swift */,
+				A42103172C625F75005580E9 /* EnvVariable.swift */,
+				A42103192C625F75005580E9 /* EnvFileManager.swift */,
+				A421031B2C625F75005580E9 /* EnvViewModel.swift */,
+				A42103212C625F75005580E9 /* EnvContentView.swift */,
+				A421031D2C625F75005580E9 /* EnvFormView.swift */,
+				A421031F2C625F75005580E9 /* EnvRowView.swift */,
+				A42103232C625F76005580E9 /* HomeView.swift */,
+				A42103252C625F77005580E9 /* DeleteButton.swift */,
 				A42103012C625F73005580E9 /* Assets.xcassets */,
 				A42103062C625F73005580E9 /* AliasManager.entitlements */,
 				A42103032C625F73005580E9 /* Preview Content */,
@@ -72,9 +111,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A42102F92C625F72005580E9 /* AliasManager */ = {
+		A42102F92C625F72005580E9 /* DotBuddy */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A42103092C625F73005580E9 /* Build configuration list for PBXNativeTarget "AliasManager" */;
+			buildConfigurationList = A42103092C625F73005580E9 /* Build configuration list for PBXNativeTarget "DotBuddy" */;
 			buildPhases = (
 				A42102F62C625F72005580E9 /* Sources */,
 				A42102F72C625F72005580E9 /* Frameworks */,
@@ -84,9 +123,9 @@
 			);
 			dependencies = (
 			);
-			name = AliasManager;
+			name = DotBuddy;
 			productName = AliasManager;
-			productReference = A42102FA2C625F72005580E9 /* AliasManager.app */;
+			productReference = A42102FA2C625F72005580E9 /* DotBuddy.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -97,14 +136,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					A42102F92C625F72005580E9 = {
 						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
-			buildConfigurationList = A42102F52C625F72005580E9 /* Build configuration list for PBXProject "AliasManager" */;
+			buildConfigurationList = A42102F52C625F72005580E9 /* Build configuration list for PBXProject "DotBuddy" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -117,7 +156,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A42102F92C625F72005580E9 /* AliasManager */,
+				A42102F92C625F72005580E9 /* DotBuddy */,
 			);
 		};
 /* End PBXProject section */
@@ -140,7 +179,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				A42103002C625F72005580E9 /* ContentView.swift in Sources */,
-				A42102FE2C625F72005580E9 /* AliasManagerApp.swift in Sources */,
+				A42102FE2C625F72005580E9 /* DotBuddyApp.swift in Sources */,
+				A421030C2C625F74005580E9 /* Alias.swift in Sources */,
+				A421030E2C625F74005580E9 /* AliasFileManager.swift in Sources */,
+				A42103102C625F74005580E9 /* AliasViewModel.swift in Sources */,
+				A42103122C625F74005580E9 /* AliasFormView.swift in Sources */,
+				A42103142C625F74005580E9 /* AliasRowView.swift in Sources */,
+				A42103162C625F75005580E9 /* EnvVariable.swift in Sources */,
+				A42103182C625F75005580E9 /* EnvFileManager.swift in Sources */,
+				A421031A2C625F75005580E9 /* EnvViewModel.swift in Sources */,
+				A42103202C625F75005580E9 /* EnvContentView.swift in Sources */,
+				A421031C2C625F75005580E9 /* EnvFormView.swift in Sources */,
+				A421031E2C625F75005580E9 /* EnvRowView.swift in Sources */,
+				A42103222C625F76005580E9 /* HomeView.swift in Sources */,
+				A42103242C625F77005580E9 /* DeleteButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +233,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -205,6 +258,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -244,6 +298,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -261,6 +316,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -274,17 +330,19 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"AliasManager/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to reveal secret environment variables.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Zack Wagner. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = zackwag.AliasManager;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
+				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -299,17 +357,19 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"AliasManager/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to reveal secret environment variables.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Zack Wagner. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = zackwag.AliasManager;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
+				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -318,7 +378,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A42102F52C625F72005580E9 /* Build configuration list for PBXProject "AliasManager" */ = {
+		A42102F52C625F72005580E9 /* Build configuration list for PBXProject "DotBuddy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A42103072C625F73005580E9 /* Debug */,
@@ -327,7 +387,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A42103092C625F73005580E9 /* Build configuration list for PBXNativeTarget "AliasManager" */ = {
+		A42103092C625F73005580E9 /* Build configuration list for PBXNativeTarget "DotBuddy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A421030A2C625F73005580E9 /* Debug */,

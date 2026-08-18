@@ -2,15 +2,15 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct ContentView: View {
-    @ObservedObject var viewModel: AliasViewModel
+struct EnvContentView: View {
+    @ObservedObject var viewModel: EnvViewModel
     var onBack: () -> Void
     @State private var isFormVisible = false
-    @State private var editingAlias: Alias?
-    @State private var aliasName = ""
-    @State private var aliasCommand = ""
-    @State private var aliasGroup = ""
-    @State private var aliasToDelete: Alias?
+    @State private var editingVariable: EnvVariable?
+    @State private var varName = ""
+    @State private var varValue = ""
+    @State private var varGroup = ""
+    @State private var variableToDelete: EnvVariable?
     @State private var showDeleteConfirmation = false
     @State private var showSaveConfirmation = false
     @State private var showDiscardConfirmation = false
@@ -31,22 +31,22 @@ struct ContentView: View {
             }
         }
         .toolbar { toolbarContent }
-        .navigationTitle("DotBuddy — Aliases")
+        .navigationTitle("DotBuddy — Environment")
         .navigationSubtitle(viewModel.fileName)
         .alert("Error", isPresented: $viewModel.showError) {
             Button("OK") {}
         } message: {
             Text(viewModel.errorMessage ?? "An unknown error occurred.")
         }
-        .alert("Delete Alias", isPresented: $showDeleteConfirmation) {
+        .alert("Delete Variable", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
-                if let alias = aliasToDelete {
-                    viewModel.deleteAlias(alias)
+                if let variable = variableToDelete {
+                    viewModel.deleteVariable(variable)
                 }
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete '\(aliasToDelete?.name ?? "")'?")
+            Text("Are you sure you want to delete '\(variableToDelete?.name ?? "")'?")
         }
         .alert("Save Changes", isPresented: $showSaveConfirmation) {
             Button("Save") { viewModel.saveChanges() }
@@ -66,7 +66,7 @@ struct ContentView: View {
                 viewModel.suppressReminder()
             }
         } message: {
-            Text("Aliases saved. To apply changes in your current terminal, run:\n\n\(viewModel.sourceCommand)\n\nOr ensure this file is sourced in your shell config and open a new terminal.")
+            Text("Variables saved. To apply changes in your current terminal, run:\n\n\(viewModel.sourceCommand)\n\nOr ensure this file is sourced in your shell config and open a new terminal.")
         }
         .alert("Import Complete", isPresented: Binding(
             get: { importedCount != nil },
@@ -74,7 +74,7 @@ struct ContentView: View {
         )) {
             Button("OK") { importedCount = nil }
         } message: {
-            Text("\(importedCount ?? 0) new alias\(importedCount == 1 ? "" : "es") imported.")
+            Text("\(importedCount ?? 0) new variable\(importedCount == 1 ? "" : "s") imported.")
         }
         .fileImporter(
             isPresented: $showImportPicker,
@@ -84,7 +84,7 @@ struct ContentView: View {
             if case .success(let urls) = result, let url = urls.first {
                 let accessing = url.startAccessingSecurityScopedResource()
                 defer { if accessing { url.stopAccessingSecurityScopedResource() } }
-                let count = viewModel.importAliases(from: url)
+                let count = viewModel.importVariables(from: url)
                 if count > 0 { importedCount = count }
             }
         }
@@ -92,7 +92,7 @@ struct ContentView: View {
             if show {
                 showFilePicker = false
                 DispatchQueue.main.async {
-                    openAliasFilePicker()
+                    openFilePicker()
                 }
             }
         }
@@ -104,7 +104,7 @@ struct ContentView: View {
             Image(systemName: "doc.badge.gearshape")
                 .font(.system(size: 56))
                 .foregroundStyle(.tertiary)
-            Text("No alias file selected")
+            Text("No env file selected")
                 .font(.title2)
                 .foregroundStyle(.secondary)
             Text("Choose an existing file or create a new one.")
@@ -122,39 +122,39 @@ struct ContentView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity)
-        .alert("Create Alias File", isPresented: $showCreateConfirmation) {
+        .alert("Create Environment File", isPresented: $showCreateConfirmation) {
             Button("Create") { viewModel.createDefault() }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This will create a new file at:\n\n~/.aliases.zsh\n\nYou'll need to add `source ~/.aliases.zsh` to your shell config for these aliases to take effect.")
+            Text("This will create a new file at:\n\n~/.env.zsh\n\nYou'll need to add `source ~/.env.zsh` to your shell config for these variables to take effect.")
         }
     }
 
     private var mainContent: some View {
         VStack(spacing: 0) {
             if isFormVisible {
-                AliasFormView(
-                    aliasName: $aliasName,
-                    aliasCommand: $aliasCommand,
-                    aliasGroup: $aliasGroup,
+                EnvFormView(
+                    varName: $varName,
+                    varValue: $varValue,
+                    varGroup: $varGroup,
                     existingGroups: viewModel.groups,
-                    isEditing: editingAlias != nil,
+                    isEditing: editingVariable != nil,
                     onSubmit: submitForm,
                     onCancel: cancelForm
                 )
                 Divider()
             }
 
-            if viewModel.displayedAliases.isEmpty {
+            if viewModel.displayedVariables.isEmpty {
                 emptyState
             } else {
-                aliasList
+                variableList
             }
 
             Divider()
             statusBar
         }
-        .searchable(text: $viewModel.searchText, prompt: "Search aliases")
+        .searchable(text: $viewModel.searchText, prompt: "Search variables")
     }
 
     private var emptyState: some View {
@@ -164,14 +164,14 @@ struct ContentView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.tertiary)
             if viewModel.searchText.isEmpty {
-                Text("No aliases yet")
+                Text("No environment variables yet")
                     .font(.title2)
                     .foregroundStyle(.secondary)
-                Text("Click the + button to add your first alias.")
+                Text("Click the + button to add your first variable.")
                     .font(.callout)
                     .foregroundStyle(.tertiary)
             } else {
-                Text("No matching aliases")
+                Text("No matching variables")
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
@@ -180,9 +180,9 @@ struct ContentView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private var aliasList: some View {
+    private var variableList: some View {
         List {
-            ForEach(viewModel.groupedAliases, id: \.group) { section in
+            ForEach(viewModel.groupedVariables, id: \.group) { section in
                 let groupKey = section.group
                 let title = groupKey.isEmpty ? "Ungrouped" : groupKey
 
@@ -198,18 +198,19 @@ struct ContentView: View {
                         }
                     )
                 ) {
-                    ForEach(section.aliases) { alias in
-                        AliasRowView(
-                            alias: alias,
-                            onEdit: { beginEditing(alias) },
+                    ForEach(section.variables) { variable in
+                        EnvRowView(
+                            variable: variable,
+                            onEdit: { beginEditing(variable) },
                             onDelete: {
-                                aliasToDelete = alias
+                                variableToDelete = variable
                                 showDeleteConfirmation = true
-                            }
+                            },
+                            onToggleSecret: { viewModel.toggleSecret(variable) }
                         )
                     }
                     .onMove { indices, destination in
-                        viewModel.moveAliases(in: groupKey, from: indices, to: destination)
+                        viewModel.moveVariables(in: groupKey, from: indices, to: destination)
                     }
                 } label: {
                     HStack {
@@ -300,10 +301,10 @@ struct ContentView: View {
 
         ToolbarItem(placement: .primaryAction) {
             Button(action: beginAdding) {
-                Label("Add Alias", systemImage: "plus")
+                Label("Add Variable", systemImage: "plus")
             }
             .keyboardShortcut("n", modifiers: .command)
-            .help("Add a new alias (Cmd+N)")
+            .help("Add a new variable (Cmd+N)")
             .disabled(!viewModel.hasFile)
         }
 
@@ -312,7 +313,7 @@ struct ContentView: View {
                 Label("Import", systemImage: "square.and.arrow.down")
             }
             .keyboardShortcut("i", modifiers: .command)
-            .help("Import aliases from a file (Cmd+I)")
+            .help("Import variables from a file (Cmd+I)")
             .disabled(!viewModel.hasFile)
         }
 
@@ -320,7 +321,7 @@ struct ContentView: View {
             Button(action: { viewModel.sortOrder.toggle(); viewModel.applySort() }) {
                 Label("Sort", systemImage: viewModel.sortOrder.systemImage)
             }
-            .help("Sort aliases by name")
+            .help("Sort variables by name")
             .disabled(!viewModel.hasFile)
         }
 
@@ -328,32 +329,32 @@ struct ContentView: View {
             Button(action: { showFilePicker = true }) {
                 Label("Change File", systemImage: "folder")
             }
-            .help("Select a different alias file")
+            .help("Select a different env file")
         }
     }
 
     private func beginAdding() {
-        editingAlias = nil
-        aliasName = ""
-        aliasCommand = ""
-        aliasGroup = ""
+        editingVariable = nil
+        varName = ""
+        varValue = ""
+        varGroup = ""
         isFormVisible = true
     }
 
-    private func beginEditing(_ alias: Alias) {
-        editingAlias = alias
-        aliasName = alias.name
-        aliasCommand = alias.command
-        aliasGroup = alias.group
+    private func beginEditing(_ variable: EnvVariable) {
+        editingVariable = variable
+        varName = variable.name
+        varValue = variable.value
+        varGroup = variable.group
         isFormVisible = true
     }
 
     private func submitForm() {
         let success: Bool
-        if let editing = editingAlias {
-            success = viewModel.updateAlias(id: editing.id, name: aliasName, command: aliasCommand, group: aliasGroup)
+        if let editing = editingVariable {
+            success = viewModel.updateVariable(id: editing.id, name: varName, value: varValue, group: varGroup)
         } else {
-            success = viewModel.addAlias(name: aliasName, command: aliasCommand, group: aliasGroup)
+            success = viewModel.addVariable(name: varName, value: varValue, group: varGroup)
         }
 
         if success {
@@ -363,10 +364,10 @@ struct ContentView: View {
 
     private func cancelForm() {
         isFormVisible = false
-        editingAlias = nil
-        aliasName = ""
-        aliasCommand = ""
-        aliasGroup = ""
+        editingVariable = nil
+        varName = ""
+        varValue = ""
+        varGroup = ""
     }
 
     private func beginRenaming(_ group: String) {
@@ -382,9 +383,9 @@ struct ContentView: View {
         renamingGroup = nil
     }
 
-    private func openAliasFilePicker() {
+    private func openFilePicker() {
         let panel = NSOpenPanel()
-        panel.title = "Select Alias File"
+        panel.title = "Select Environment Variables File"
         panel.allowedContentTypes = [.plainText, .unixExecutable]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
