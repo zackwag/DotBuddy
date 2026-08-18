@@ -25,7 +25,7 @@ jobs:
           CERTIFICATE_PATH=$RUNNER_TEMP/certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
 
-          echo -n "$CERTIFICATE_P12" | base64 --decode -o $CERTIFICATE_PATH
+          echo "$CERTIFICATE_P12" | base64 --decode > $CERTIFICATE_PATH
 
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
