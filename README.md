@@ -2,9 +2,16 @@
 
 A macOS app for managing shell aliases and environment variables through a visual interface.
 
+[![Download](https://img.shields.io/github/v/release/zackwag/DotBuddy?label=Download&style=flat-square)](https://github.com/zackwag/DotBuddy/releases/latest)
+
+![Home](screenshots/home.png)
+
 ## Features
 
 ### Aliases
+
+![Aliases](screenshots/aliases.png)
+
 - Add, edit, delete, and reorder shell aliases
 - Group aliases with comment headers (written as `# Group Name` in the file)
 - Rename, collapse/expand, and create new groups
@@ -13,6 +20,9 @@ A macOS app for managing shell aliases and environment variables through a visua
 - Copy commands to clipboard
 
 ### Environment Variables
+
+![Environment](screenshots/environment.png)
+
 - Full CRUD for `export KEY="value"` entries
 - Automatic type detection (bool, int, path, url, email, arn, uuid, args, secret)
 - Mark variables as secret — values are hidden by default
@@ -31,16 +41,17 @@ A macOS app for managing shell aliases and environment variables through a visua
 - Alternating row backgrounds
 - Hover-reactive icon buttons
 
+## Install
+
+Download the latest release from the [Releases page](https://github.com/zackwag/DotBuddy/releases/latest). Unzip and drag `DotBuddy.app` to your Applications folder.
+
+The app is signed and notarized — no Gatekeeper warnings.
+
 ## Requirements
 
 - macOS 14.5+
-- Xcode 15.4+
 
 ## Setup
-
-1. Clone the repo
-2. Open `AliasManager.xcodeproj` in Xcode
-3. Build and run (the product is named DotBuddy)
 
 On first launch, select an existing aliases/env file or click "Create Default" to generate one.
 
@@ -73,6 +84,14 @@ export AWS_REGION="us-east-1"
 # Secrets
 export GITHUB_ACCESS_TOKEN="ghp_xxxx" # [secret]
 ```
+
+## Building from Source
+
+1. Clone the repo
+2. Open `DotBuddy.xcodeproj` in Xcode
+3. Build and run
+
+Requires Xcode 15.4+.
 
 ## License
 
