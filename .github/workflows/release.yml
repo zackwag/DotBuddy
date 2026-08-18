@@ -41,7 +41,7 @@ jobs:
         run: |
           xcodebuild archive \
             -project DotBuddy.xcodeproj \
-            -scheme AliasManager \
+            -scheme DotBuddy \
             -configuration Release \
             -archivePath $RUNNER_TEMP/DotBuddy.xcarchive \
             CODE_SIGN_IDENTITY="Developer ID Application" \
