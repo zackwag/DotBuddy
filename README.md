@@ -76,4 +76,4 @@ export GITHUB_ACCESS_TOKEN="ghp_xxxx" # [secret]
 
 ## License
 
-Copyright 2026 Zack Wagner. All rights reserved.
+MIT License. See [LICENSE](LICENSE) for details.
