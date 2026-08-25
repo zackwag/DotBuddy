@@ -1,0 +1,60 @@
+name: Update Homebrew Tap
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-tap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get release info
+        id: release
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Download release asset and compute SHA
+        id: sha
+        run: |
+          curl -sL "https://github.com/zackwag/DotBuddy/releases/download/${{ github.ref_name }}/DotBuddy.zip" -o DotBuddy.zip
+          SHA=$(shasum -a 256 DotBuddy.zip | awk '{print $1}')
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout tap repo
+        uses: actions/checkout@v4
+        with:
+          repository: zackwag/homebrew-tap
+          token: ${{ secrets.TAP_TOKEN }}
+
+      - name: Update cask
+        run: |
+          cat > Casks/dotbuddy.rb << 'EOF'
+          cask "dotbuddy" do
+            version "${{ steps.release.outputs.version }}"
+            sha256 "${{ steps.sha.outputs.sha256 }}"
+
+            url "https://github.com/zackwag/DotBuddy/releases/download/v#{version}/DotBuddy.zip"
+            name "DotBuddy"
+            desc "Manage your shell aliases and environment variables"
+            homepage "https://github.com/zackwag/DotBuddy"
+
+            depends_on macos: ">= :sonoma"
+
+            app "DotBuddy.app"
+
+            zap trash: [
+              "~/Library/Preferences/dev.zackwag.DotBuddy.plist",
+            ]
+          end
+          EOF
+          sed -i 's/^          //' Casks/dotbuddy.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/dotbuddy.rb
+          git commit -m "Update DotBuddy to ${{ steps.release.outputs.version }}"
+          git push
