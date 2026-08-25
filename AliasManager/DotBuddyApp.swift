@@ -17,6 +17,12 @@ struct DotBuddyApp: App {
                         ContentView(viewModel: aliasViewModel, onBack: { activeSection = nil })
                     case .environment:
                         EnvContentView(viewModel: envViewModel, onBack: { activeSection = nil })
+                    case .library:
+                        LibraryView(
+                            aliasViewModel: aliasViewModel,
+                            envViewModel: envViewModel,
+                            onBack: { activeSection = nil }
+                        )
                     }
                 } else {
                     HomeView(

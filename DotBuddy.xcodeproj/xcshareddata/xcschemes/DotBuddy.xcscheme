@@ -17,12 +17,19 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A42102F92C625F72005580E9"
                BuildableName = "DotBuddy.app"
-               BlueprintName = "AliasManager"
+               BlueprintName = "DotBuddy"
                ReferencedContainer = "container:DotBuddy.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
+   </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -39,11 +46,21 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A42102F92C625F72005580E9"
             BuildableName = "DotBuddy.app"
-            BlueprintName = "AliasManager"
+            BlueprintName = "DotBuddy"
             ReferencedContainer = "container:DotBuddy.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">

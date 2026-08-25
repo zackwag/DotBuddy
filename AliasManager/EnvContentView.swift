@@ -21,6 +21,7 @@ struct EnvContentView: View {
     @State private var collapsedGroups: Set<String> = []
     @State private var renamingGroup: String?
     @State private var renameText = ""
+    @State private var showLibrary = false
 
     var body: some View {
         Group {
@@ -86,6 +87,14 @@ struct EnvContentView: View {
                 defer { if accessing { url.stopAccessingSecurityScopedResource() } }
                 let count = viewModel.importVariables(from: url)
                 if count > 0 { importedCount = count }
+            }
+        }
+        .sheet(isPresented: $showLibrary) {
+            LibrarySheetView(
+                type: .environment,
+                existingNames: Set(viewModel.workingVariables.map(\.name))
+            ) { item in
+                viewModel.addVariable(name: item.name, value: item.value, group: item.category)
             }
         }
         .onChange(of: showFilePicker) { _, show in
@@ -314,6 +323,14 @@ struct EnvContentView: View {
             }
             .keyboardShortcut("i", modifiers: .command)
             .help("Import variables from a file (Cmd+I)")
+            .disabled(!viewModel.hasFile)
+        }
+
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: { showLibrary = true }) {
+                Label("Library", systemImage: "book.closed")
+            }
+            .help("Browse environment variable suggestions")
             .disabled(!viewModel.hasFile)
         }
 

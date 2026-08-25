@@ -21,6 +21,7 @@ struct ContentView: View {
     @State private var collapsedGroups: Set<String> = []
     @State private var renamingGroup: String?
     @State private var renameText = ""
+    @State private var showLibrary = false
 
     var body: some View {
         Group {
@@ -86,6 +87,14 @@ struct ContentView: View {
                 defer { if accessing { url.stopAccessingSecurityScopedResource() } }
                 let count = viewModel.importAliases(from: url)
                 if count > 0 { importedCount = count }
+            }
+        }
+        .sheet(isPresented: $showLibrary) {
+            LibrarySheetView(
+                type: .alias,
+                existingNames: Set(viewModel.workingAliases.map(\.name))
+            ) { item in
+                viewModel.addAlias(name: item.name, command: item.value, group: item.category)
             }
         }
         .onChange(of: showFilePicker) { _, show in
@@ -313,6 +322,14 @@ struct ContentView: View {
             }
             .keyboardShortcut("i", modifiers: .command)
             .help("Import aliases from a file (Cmd+I)")
+            .disabled(!viewModel.hasFile)
+        }
+
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: { showLibrary = true }) {
+                Label("Library", systemImage: "book.closed")
+            }
+            .help("Browse alias suggestions")
             .disabled(!viewModel.hasFile)
         }
 

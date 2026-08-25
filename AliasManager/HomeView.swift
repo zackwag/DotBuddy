@@ -3,6 +3,7 @@ import SwiftUI
 enum AppSection: Hashable {
     case aliases
     case environment
+    case library
 }
 
 struct HomeView: View {
@@ -33,6 +34,9 @@ struct HomeView: View {
                     envCard
                 }
                 .padding(.top, 12)
+
+                libraryCard
+                    .padding(.top, 4)
             }
 
             Spacer()
@@ -113,6 +117,35 @@ struct HomeView: View {
             }
             .padding()
             .frame(width: 220, alignment: .leading)
+            .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
+        }
+        .buttonStyle(CardButtonStyle())
+    }
+
+    private var libraryCard: some View {
+        Button(action: { activeSection = .library }) {
+            HStack(spacing: 12) {
+                Image(systemName: "book.closed")
+                    .font(.title2)
+                    .foregroundStyle(.purple)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Snippet Library")
+                        .font(.headline)
+                    Text("Browse commonly used aliases and environment variables")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding()
+            .frame(width: 456, alignment: .leading)
             .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
         }

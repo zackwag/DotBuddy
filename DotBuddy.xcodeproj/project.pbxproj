@@ -24,6 +24,9 @@
 		A42103202C625F75005580E9 /* EnvContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103212C625F75005580E9 /* EnvContentView.swift */; };
 		A42103222C625F76005580E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103232C625F76005580E9 /* HomeView.swift */; };
 		A42103242C625F77005580E9 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103252C625F77005580E9 /* DeleteButton.swift */; };
+		A42103262C625F78005580E9 /* LibraryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103272C625F78005580E9 /* LibraryData.swift */; };
+		A42103282C625F79005580E9 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103292C625F79005580E9 /* LibraryView.swift */; };
+		A421032A2C625F7A005580E9 /* LibrarySheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421032B2C625F7A005580E9 /* LibrarySheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +49,9 @@
 		A42103212C625F75005580E9 /* EnvContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvContentView.swift; sourceTree = "<group>"; };
 		A42103232C625F76005580E9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A42103252C625F77005580E9 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
+		A42103272C625F78005580E9 /* LibraryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryData.swift; sourceTree = "<group>"; };
+		A42103292C625F79005580E9 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		A421032B2C625F7A005580E9 /* LibrarySheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +99,9 @@
 				A421031F2C625F75005580E9 /* EnvRowView.swift */,
 				A42103232C625F76005580E9 /* HomeView.swift */,
 				A42103252C625F77005580E9 /* DeleteButton.swift */,
+				A42103272C625F78005580E9 /* LibraryData.swift */,
+				A42103292C625F79005580E9 /* LibraryView.swift */,
+				A421032B2C625F7A005580E9 /* LibrarySheetView.swift */,
 				A42103012C625F73005580E9 /* Assets.xcassets */,
 				A42103062C625F73005580E9 /* AliasManager.entitlements */,
 				A42103032C625F73005580E9 /* Preview Content */,
@@ -193,6 +202,9 @@
 				A421031E2C625F75005580E9 /* EnvRowView.swift in Sources */,
 				A42103222C625F76005580E9 /* HomeView.swift in Sources */,
 				A42103242C625F77005580E9 /* DeleteButton.swift in Sources */,
+				A42103262C625F78005580E9 /* LibraryData.swift in Sources */,
+				A42103282C625F79005580E9 /* LibraryView.swift in Sources */,
+				A421032A2C625F7A005580E9 /* LibrarySheetView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
