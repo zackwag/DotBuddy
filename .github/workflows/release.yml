@@ -109,3 +109,40 @@ jobs:
         with:
           files: ${{ runner.temp }}/export/DotBuddy.zip
           generate_release_notes: true
+
+      - name: Update Homebrew tap
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          SHA=$(shasum -a 256 $RUNNER_TEMP/export/DotBuddy.zip | awk '{print $1}')
+
+          git clone https://x-access-token:${TAP_TOKEN}@github.com/zackwag/homebrew-tap.git /tmp/tap
+          cd /tmp/tap
+
+          cat > Casks/dotbuddy.rb << EOF
+          cask "dotbuddy" do
+            version "${VERSION}"
+            sha256 "${SHA}"
+
+            url "https://github.com/zackwag/DotBuddy/releases/download/v#{version}/DotBuddy.zip"
+            name "DotBuddy"
+            desc "Manage your shell aliases and environment variables"
+            homepage "https://github.com/zackwag/DotBuddy"
+
+            depends_on macos: :sonoma
+
+            app "DotBuddy.app"
+
+            zap trash: [
+              "~/Library/Preferences/dev.zackwag.DotBuddy.plist",
+            ]
+          end
+          EOF
+          sed -i '' 's/^          //' Casks/dotbuddy.rb
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/dotbuddy.rb
+          git commit -m "Update DotBuddy to ${VERSION}"
+          git push
