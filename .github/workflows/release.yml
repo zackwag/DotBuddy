@@ -125,7 +125,7 @@ jobs:
             version "${VERSION}"
             sha256 "${SHA}"
 
-            url "https://github.com/zackwag/DotBuddy/releases/download/v#{version}/DotBuddy.zip"
+            url "https://github.com/zackwag/DotBuddy/releases/download/v${VERSION}/DotBuddy.zip"
             name "DotBuddy"
             desc "Manage your shell aliases and environment variables"
             homepage "https://github.com/zackwag/DotBuddy"
