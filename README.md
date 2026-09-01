@@ -122,22 +122,6 @@ Lines prefixed with `##` are disabled entries — they are preserved in the file
 
 ## Contributing to the Snippet Library
 
-The snippet library lives in [`library/library.json`](library/library.json). To suggest new aliases or environment variables:
-
-1. Fork this repo
-2. Edit `library/library.json` — add your entries to an existing category or create a new one
-3. Open a pull request
-
-Each entry follows this format:
-
-```json
-{"name": "myalias", "value": "some command", "description": "What it does", "type": "alias", "category": "Category Name"}
-```
-
-Use `"type": "alias"` for aliases and `"type": "environment"` for environment variables. The `category` should match the `name` of the category array it belongs to.
-
-## Contributing to the Snippet Library
-
 To suggest new aliases or environment variables for the built-in library:
 
 1. Select aliases or environment variables using selection mode
