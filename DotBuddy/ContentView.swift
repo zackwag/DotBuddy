@@ -36,6 +36,15 @@ struct ContentView: View {
     @Environment(\.undoManager) var undoManager
 
     var body: some View {
+        contentWithAllAlerts
+            .onAppear { viewModel.undoManager = undoManager }
+            .onChange(of: undoManager) { _, newValue in viewModel.undoManager = newValue }
+            .onKeyPress(.escape) { handleEscape() }
+            .onKeyPress(.delete) { handleDelete() }
+            .onKeyPress(.deleteForward) { handleDelete() }
+    }
+
+    var baseContent: some View {
         Group {
             if viewModel.hasFile {
                 mainContent
@@ -76,104 +85,111 @@ struct ContentView: View {
         } message: {
             Text("Are you sure you want to delete \(selectedAliases.count) alias\(selectedAliases.count == 1 ? "" : "es")?")
         }
-        .alert("Save Changes", isPresented: $showSaveConfirmation) {
-            Button("Save") { viewModel.saveChanges() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Save all changes to \(viewModel.fileName)?")
-        }
-        .alert("Discard Changes", isPresented: $showDiscardConfirmation) {
-            Button("Discard", role: .destructive) { viewModel.discardChanges() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("All unsaved changes will be lost.")
-        }
-        .alert("Saved", isPresented: $viewModel.showSourceReminder) {
-            Button("OK") {}
-            Button("Don't show again", role: .cancel) {
-                viewModel.suppressReminder()
+    }
+
+    var contentWithSaveAlerts: some View {
+        baseContent
+            .alert("Save Changes", isPresented: $showSaveConfirmation) {
+                Button("Save") { viewModel.saveChanges() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Save all changes to \(viewModel.fileName)?")
             }
-        } message: {
-            Text("""
-            Aliases saved. To apply changes in your current terminal, run:\
-            \n\n\(viewModel.sourceCommand)\n\n\
-            Or ensure this file is sourced in your shell config and open a new terminal.
-            """)
-        }
-        .alert("Import Complete", isPresented: Binding(
-            get: { importedCount != nil },
-            set: { if !$0 { importedCount = nil } }
-        )) {
-            Button("OK") { importedCount = nil }
-        } message: {
-            Text("\(importedCount ?? 0) new alias\(importedCount == 1 ? "" : "es") imported.")
-        }
-        .fileImporter(
-            isPresented: $showImportPicker,
-            allowedContentTypes: [.plainText, .unixExecutable],
-            allowsMultipleSelection: false
-        ) { result in
-            if case .success(let urls) = result, let url = urls.first {
-                let accessing = url.startAccessingSecurityScopedResource()
-                defer { if accessing { url.stopAccessingSecurityScopedResource() } }
-                let count = viewModel.importAliases(from: url)
-                if count > 0 { importedCount = count }
+            .alert("Discard Changes", isPresented: $showDiscardConfirmation) {
+                Button("Discard", role: .destructive) { viewModel.discardChanges() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("All unsaved changes will be lost.")
             }
-        }
-        .sheet(isPresented: $showLibrary) {
-            LibrarySheetView(
-                type: .alias,
-                existingNames: Set(viewModel.workingAliases.map(\.name)),
-                existingGroups: viewModel.groups,
-                libraryStore: libraryStore
-            ) { item in
-                viewModel.addAlias(name: item.name, command: item.value, group: item.category)
+            .alert("Saved", isPresented: $viewModel.showSourceReminder) {
+                Button("OK") {}
+                Button("Don't show again", role: .cancel) {
+                    viewModel.suppressReminder()
+                }
+            } message: {
+                Text("""
+                Aliases saved. To apply changes in your current terminal, run:\
+                \n\n\(viewModel.sourceCommand)\n\n\
+                Or ensure this file is sourced in your shell config and open a new terminal.
+                """)
             }
-        }
-        .onChange(of: showFilePicker) { _, show in
-            if show {
-                showFilePicker = false
-                DispatchQueue.main.async {
-                    openAliasFilePicker()
+            .alert("Import Complete", isPresented: Binding(
+                get: { importedCount != nil },
+                set: { if !$0 { importedCount = nil } }
+            )) {
+                Button("OK") { importedCount = nil }
+            } message: {
+                Text("\(importedCount ?? 0) new alias\(importedCount == 1 ? "" : "es") imported.")
+            }
+    }
+
+    var contentWithSheets: some View {
+        contentWithSaveAlerts
+            .fileImporter(
+                isPresented: $showImportPicker,
+                allowedContentTypes: [.plainText, .unixExecutable],
+                allowsMultipleSelection: false
+            ) { result in
+                if case .success(let urls) = result, let url = urls.first {
+                    let accessing = url.startAccessingSecurityScopedResource()
+                    defer { if accessing { url.stopAccessingSecurityScopedResource() } }
+                    let count = viewModel.importAliases(from: url)
+                    if count > 0 { importedCount = count }
                 }
             }
-        }
-        .alert("Restore Backup", isPresented: $showRestoreConfirmation) {
-            Button("Restore", role: .destructive) { viewModel.restoreFromBackup() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This will replace the current file with the last saved backup. Unsaved changes will be lost.")
-        }
-        .alert("Replace with Empty", isPresented: $showReplaceConfirmation) {
-            Button("Replace All", role: .destructive) {
-                viewModel.replaceInCommands(find: replaceFind, replaceWith: replaceWith)
-                showReplaceBar = false
-                replaceFind = ""
-                replaceWith = ""
+            .sheet(isPresented: $showLibrary) {
+                LibrarySheetView(
+                    type: .alias,
+                    existingNames: Set(viewModel.workingAliases.map(\.name)),
+                    existingGroups: viewModel.groups,
+                    libraryStore: libraryStore
+                ) { item in
+                    viewModel.addAlias(name: item.name, command: item.value, group: item.category)
+                }
             }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            let matchCount = viewModel.workingAliases.filter { $0.command.contains(replaceFind) }.count
-            Text("This will remove '\(replaceFind)' from \(matchCount) command\(matchCount == 1 ? "" : "s"). This cannot be undone with Replace.")
-        }
-        .alert("Unsaved Changes", isPresented: $showBackConfirmation) {
-            Button("Save & Go Back") {
-                viewModel.saveChanges()
-                onBack()
+            .onChange(of: showFilePicker) { _, show in
+                if show {
+                    showFilePicker = false
+                    DispatchQueue.main.async {
+                        openAliasFilePicker()
+                    }
+                }
             }
-            Button("Discard & Go Back", role: .destructive) {
-                viewModel.discardChanges()
-                onBack()
+            .alert("Restore Backup", isPresented: $showRestoreConfirmation) {
+                Button("Restore", role: .destructive) { viewModel.restoreFromBackup() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will replace the current file with the last saved backup. Unsaved changes will be lost.")
             }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("You have unsaved changes. What would you like to do?")
-        }
-        .onAppear { viewModel.undoManager = undoManager }
-        .onChange(of: undoManager) { _, newValue in viewModel.undoManager = newValue }
-        .onKeyPress(.escape) { handleEscape() }
-        .onKeyPress(.delete) { handleDelete() }
-        .onKeyPress(.deleteForward) { handleDelete() }
+    }
+
+    var contentWithAllAlerts: some View {
+        contentWithSheets
+            .alert("Replace with Empty", isPresented: $showReplaceConfirmation) {
+                Button("Replace All", role: .destructive) {
+                    viewModel.replaceInCommands(find: replaceFind, replaceWith: replaceWith)
+                    showReplaceBar = false
+                    replaceFind = ""
+                    replaceWith = ""
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                let matchCount = viewModel.workingAliases.filter { $0.command.contains(replaceFind) }.count
+                Text("This will remove '\(replaceFind)' from \(matchCount) command\(matchCount == 1 ? "" : "s"). This cannot be undone with Replace.")
+            }
+            .alert("Unsaved Changes", isPresented: $showBackConfirmation) {
+                Button("Save & Go Back") {
+                    viewModel.saveChanges()
+                    onBack()
+                }
+                Button("Discard & Go Back", role: .destructive) {
+                    viewModel.discardChanges()
+                    onBack()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("You have unsaved changes. What would you like to do?")
+            }
     }
 
     var noFileState: some View {
@@ -235,7 +251,7 @@ struct ContentView: View {
                 )
                 .onChange(of: aliasName) { _, name in
                     Task.detached { [viewModel] in
-                        let warning = await viewModel.shadowWarning(for: name)
+                        let warning = viewModel.shadowWarning(for: name)
                         await MainActor.run { aliasShadowWarning = warning }
                     }
                 }

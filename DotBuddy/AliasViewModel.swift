@@ -454,8 +454,8 @@ final class AliasViewModel: ObservableObject {
         do {
             try process.run()
             process.waitUntilExit()
+            let data = pipe.fileHandleForReading.availableData
             if process.terminationStatus == 0,
-               let data = try? pipe.fileHandleForReading.availableData,
                let path = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
                !path.isEmpty {
                 return "Shadows \(path)"

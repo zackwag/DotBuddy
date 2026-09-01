@@ -242,7 +242,7 @@ struct LibraryView: View {
                 .padding(.vertical, 8)
             }
         }
-        .frame(width: 260, maxHeight: 300)
+        .frame(maxWidth: 260, maxHeight: 300)
     }
 
     @ToolbarContentBuilder

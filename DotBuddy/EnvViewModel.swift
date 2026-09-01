@@ -205,7 +205,7 @@ final class EnvViewModel: ObservableObject {
         guard let index = workingVariables.firstIndex(where: { $0.id == id }) else { return false }
         let existing = workingVariables[index]
         workingVariables[index] = EnvVariable(
-            id: id, name: name, value: value, group: group, isEnabled: existing.isEnabled, isSecret: existing.isSecret
+            id: id, name: name, value: value, group: group, isSecret: existing.isSecret, isEnabled: existing.isEnabled
         )
         return true
     }
