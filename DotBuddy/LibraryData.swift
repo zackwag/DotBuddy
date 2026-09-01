@@ -72,7 +72,7 @@ final class LibraryStore: ObservableObject {
         "Common": "list.bullet",
         "Git": "arrow.triangle.branch",
         "Docker": "shippingbox",
-        "Docker Compose": "shippingbox.2",
+        "Docker Compose": "square.stack.3d.up",
         "Kubernetes": "cpu",
         "Python": "chevron.left.forwardslash.chevron.right",
         "Node.js": "cube",
@@ -149,7 +149,7 @@ final class LibraryStore: ObservableObject {
             LibraryItem(name: "dlo", value: "docker container logs", description: "View container logs", type: .alias, category: "Docker"),
             LibraryItem(name: "dstp", value: "docker container stop", description: "Stop container", type: .alias, category: "Docker"),
         ]),
-        LibraryCategory(name: "Docker Compose", icon: "shippingbox.2", items: [
+        LibraryCategory(name: "Docker Compose", icon: "square.stack.3d.up", items: [
             LibraryItem(name: "dco", value: "docker compose", description: "Compose shorthand", type: .alias, category: "Docker Compose"),
             LibraryItem(name: "dcup", value: "docker compose up", description: "Start services", type: .alias, category: "Docker Compose"),
             LibraryItem(name: "dcupd", value: "docker compose up -d", description: "Start detached", type: .alias, category: "Docker Compose"),
