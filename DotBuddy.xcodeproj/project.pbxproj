@@ -19,14 +19,21 @@
 		A42103162C625F75005580E9 /* EnvVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103172C625F75005580E9 /* EnvVariable.swift */; };
 		A42103182C625F75005580E9 /* EnvFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103192C625F75005580E9 /* EnvFileManager.swift */; };
 		A421031A2C625F75005580E9 /* EnvViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421031B2C625F75005580E9 /* EnvViewModel.swift */; };
-		A421031C2C625F75005580E9 /* EnvFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421031D2C625F75005580E9 /* EnvFormView.swift */; };
+
 		A421031E2C625F75005580E9 /* EnvRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421031F2C625F75005580E9 /* EnvRowView.swift */; };
 		A42103202C625F75005580E9 /* EnvContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103212C625F75005580E9 /* EnvContentView.swift */; };
 		A42103222C625F76005580E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103232C625F76005580E9 /* HomeView.swift */; };
-		A42103242C625F77005580E9 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103252C625F77005580E9 /* DeleteButton.swift */; };
+		A42103242C625F77005580E9 /* HoverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103252C625F77005580E9 /* HoverButton.swift */; };
 		A42103262C625F78005580E9 /* LibraryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103272C625F78005580E9 /* LibraryData.swift */; };
 		A42103282C625F79005580E9 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42103292C625F79005580E9 /* LibraryView.swift */; };
 		A421032A2C625F7A005580E9 /* LibrarySheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421032B2C625F7A005580E9 /* LibrarySheetView.swift */; };
+		A421032C2C625F7B005580E9 /* BulkActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421032D2C625F7B005580E9 /* BulkActionBar.swift */; };
+		B40000022C625F7C005580E9 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000032C625F7C005580E9 /* FileWatcher.swift */; };
+		B40000042C625F7D005580E9 /* HistoryInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000052C625F7D005580E9 /* HistoryInsights.swift */; };
+		C50000012D900001005580E9 /* ContentView+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000022D900001005580E9 /* ContentView+Toolbar.swift */; };
+		C50000032D900002005580E9 /* ContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000042D900002005580E9 /* ContentView+Actions.swift */; };
+		C50000052D900003005580E9 /* EnvContentView+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */; };
+		C50000072D900004005580E9 /* EnvContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000082D900004005580E9 /* EnvContentView+Actions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +42,7 @@
 		A42102FF2C625F72005580E9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A42103012C625F73005580E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A42103042C625F73005580E9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A42103062C625F73005580E9 /* AliasManager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AliasManager.entitlements; sourceTree = "<group>"; };
+		A42103062C625F73005580E9 /* DotBuddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DotBuddy.entitlements; sourceTree = "<group>"; };
 		A421030D2C625F74005580E9 /* Alias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alias.swift; sourceTree = "<group>"; };
 		A421030F2C625F74005580E9 /* AliasFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasFileManager.swift; sourceTree = "<group>"; };
 		A42103112C625F74005580E9 /* AliasViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasViewModel.swift; sourceTree = "<group>"; };
@@ -44,14 +51,21 @@
 		A42103172C625F75005580E9 /* EnvVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvVariable.swift; sourceTree = "<group>"; };
 		A42103192C625F75005580E9 /* EnvFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFileManager.swift; sourceTree = "<group>"; };
 		A421031B2C625F75005580E9 /* EnvViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvViewModel.swift; sourceTree = "<group>"; };
-		A421031D2C625F75005580E9 /* EnvFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvFormView.swift; sourceTree = "<group>"; };
+
 		A421031F2C625F75005580E9 /* EnvRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvRowView.swift; sourceTree = "<group>"; };
 		A42103212C625F75005580E9 /* EnvContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvContentView.swift; sourceTree = "<group>"; };
 		A42103232C625F76005580E9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		A42103252C625F77005580E9 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
+		A42103252C625F77005580E9 /* HoverButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverButton.swift; sourceTree = "<group>"; };
 		A42103272C625F78005580E9 /* LibraryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryData.swift; sourceTree = "<group>"; };
 		A42103292C625F79005580E9 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		A421032B2C625F7A005580E9 /* LibrarySheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySheetView.swift; sourceTree = "<group>"; };
+		A421032D2C625F7B005580E9 /* BulkActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkActionBar.swift; sourceTree = "<group>"; };
+		B40000032C625F7C005580E9 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
+		B40000052C625F7D005580E9 /* HistoryInsights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryInsights.swift; sourceTree = "<group>"; };
+		C50000022D900001005580E9 /* ContentView+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+Toolbar.swift"; sourceTree = "<group>"; };
+		C50000042D900002005580E9 /* ContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+Actions.swift"; sourceTree = "<group>"; };
+		C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvContentView+Toolbar.swift"; sourceTree = "<group>"; };
+		C50000082D900004005580E9 /* EnvContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvContentView+Actions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +82,7 @@
 		A42102F12C625F72005580E9 = {
 			isa = PBXGroup;
 			children = (
-				A42102FC2C625F72005580E9 /* AliasManager */,
+				A42102FC2C625F72005580E9 /* DotBuddy */,
 				A42102FB2C625F72005580E9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,7 +95,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A42102FC2C625F72005580E9 /* AliasManager */ = {
+		A42102FC2C625F72005580E9 /* DotBuddy */ = {
 			isa = PBXGroup;
 			children = (
 				A42102FD2C625F72005580E9 /* DotBuddyApp.swift */,
@@ -89,24 +103,30 @@
 				A421030F2C625F74005580E9 /* AliasFileManager.swift */,
 				A42103112C625F74005580E9 /* AliasViewModel.swift */,
 				A42102FF2C625F72005580E9 /* ContentView.swift */,
+				C50000022D900001005580E9 /* ContentView+Toolbar.swift */,
+				C50000042D900002005580E9 /* ContentView+Actions.swift */,
 				A42103132C625F74005580E9 /* AliasFormView.swift */,
 				A42103152C625F74005580E9 /* AliasRowView.swift */,
 				A42103172C625F75005580E9 /* EnvVariable.swift */,
 				A42103192C625F75005580E9 /* EnvFileManager.swift */,
 				A421031B2C625F75005580E9 /* EnvViewModel.swift */,
 				A42103212C625F75005580E9 /* EnvContentView.swift */,
-				A421031D2C625F75005580E9 /* EnvFormView.swift */,
+				C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */,
+				C50000082D900004005580E9 /* EnvContentView+Actions.swift */,
 				A421031F2C625F75005580E9 /* EnvRowView.swift */,
 				A42103232C625F76005580E9 /* HomeView.swift */,
-				A42103252C625F77005580E9 /* DeleteButton.swift */,
+				A42103252C625F77005580E9 /* HoverButton.swift */,
 				A42103272C625F78005580E9 /* LibraryData.swift */,
 				A42103292C625F79005580E9 /* LibraryView.swift */,
 				A421032B2C625F7A005580E9 /* LibrarySheetView.swift */,
+				A421032D2C625F7B005580E9 /* BulkActionBar.swift */,
+				B40000032C625F7C005580E9 /* FileWatcher.swift */,
+				B40000052C625F7D005580E9 /* HistoryInsights.swift */,
 				A42103012C625F73005580E9 /* Assets.xcassets */,
-				A42103062C625F73005580E9 /* AliasManager.entitlements */,
+				A42103062C625F73005580E9 /* DotBuddy.entitlements */,
 				A42103032C625F73005580E9 /* Preview Content */,
 			);
-			path = AliasManager;
+			path = DotBuddy;
 			sourceTree = "<group>";
 		};
 		A42103032C625F73005580E9 /* Preview Content */ = {
@@ -119,11 +139,34 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B40000012C625F72005580E9 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if command -v swiftlint >/dev/null 2>&1; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		A42102F92C625F72005580E9 /* DotBuddy */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A42103092C625F73005580E9 /* Build configuration list for PBXNativeTarget "DotBuddy" */;
 			buildPhases = (
+				B40000012C625F72005580E9 /* SwiftLint */,
 				A42102F62C625F72005580E9 /* Sources */,
 				A42102F72C625F72005580E9 /* Frameworks */,
 				A42102F82C625F72005580E9 /* Resources */,
@@ -133,7 +176,7 @@
 			dependencies = (
 			);
 			name = DotBuddy;
-			productName = AliasManager;
+			productName = DotBuddy;
 			productReference = A42102FA2C625F72005580E9 /* DotBuddy.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -188,6 +231,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A42103002C625F72005580E9 /* ContentView.swift in Sources */,
+				C50000012D900001005580E9 /* ContentView+Toolbar.swift in Sources */,
+				C50000032D900002005580E9 /* ContentView+Actions.swift in Sources */,
 				A42102FE2C625F72005580E9 /* DotBuddyApp.swift in Sources */,
 				A421030C2C625F74005580E9 /* Alias.swift in Sources */,
 				A421030E2C625F74005580E9 /* AliasFileManager.swift in Sources */,
@@ -198,13 +243,17 @@
 				A42103182C625F75005580E9 /* EnvFileManager.swift in Sources */,
 				A421031A2C625F75005580E9 /* EnvViewModel.swift in Sources */,
 				A42103202C625F75005580E9 /* EnvContentView.swift in Sources */,
-				A421031C2C625F75005580E9 /* EnvFormView.swift in Sources */,
+				C50000052D900003005580E9 /* EnvContentView+Toolbar.swift in Sources */,
+				C50000072D900004005580E9 /* EnvContentView+Actions.swift in Sources */,
 				A421031E2C625F75005580E9 /* EnvRowView.swift in Sources */,
 				A42103222C625F76005580E9 /* HomeView.swift in Sources */,
-				A42103242C625F77005580E9 /* DeleteButton.swift in Sources */,
+				A42103242C625F77005580E9 /* HoverButton.swift in Sources */,
 				A42103262C625F78005580E9 /* LibraryData.swift in Sources */,
 				A42103282C625F79005580E9 /* LibraryView.swift in Sources */,
 				A421032A2C625F7A005580E9 /* LibrarySheetView.swift in Sources */,
+				A421032C2C625F7B005580E9 /* BulkActionBar.swift in Sources */,
+				B40000022C625F7C005580E9 /* FileWatcher.swift in Sources */,
+				B40000042C625F7D005580E9 /* HistoryInsights.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,12 +387,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AliasManager/AliasManager.entitlements;
+				CODE_SIGN_ENTITLEMENTS = DotBuddy/DotBuddy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"AliasManager/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"DotBuddy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to reveal secret environment variables.";
@@ -352,7 +401,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
 				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -365,12 +414,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AliasManager/AliasManager.entitlements;
+				CODE_SIGN_ENTITLEMENTS = DotBuddy/DotBuddy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"AliasManager/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"DotBuddy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to reveal secret environment variables.";
@@ -379,7 +428,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
 				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
