@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UserNotifications
 
 @MainActor
 final class AliasViewModel: ObservableObject {
@@ -193,6 +194,7 @@ final class AliasViewModel: ObservableObject {
             }
             guard !self.hasUnsavedChanges else { return }
             self.fileChangedExternally = true
+            self.sendFileChangedNotification(fileName: self.fileName)
         }
         fileWatcher?.watch(path: path)
     }
@@ -473,5 +475,15 @@ final class AliasViewModel: ObservableObject {
             target.workingAliases = oldValue
             target.isUndoing = false
         }
+    }
+
+    func sendFileChangedNotification(fileName: String) {
+        guard !NSApp.isActive else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "File Changed"
+        content.body = "\(fileName) was modified externally."
+        content.sound = .default
+        let request = UNNotificationRequest(identifier: "file-changed-alias", content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 }

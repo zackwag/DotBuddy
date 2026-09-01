@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UserNotifications
 
 @MainActor
 final class EnvViewModel: ObservableObject {
@@ -148,6 +149,7 @@ final class EnvViewModel: ObservableObject {
             }
             guard !self.hasUnsavedChanges else { return }
             self.fileChangedExternally = true
+            self.sendFileChangedNotification(fileName: self.fileName)
         }
         fileWatcher?.watch(path: path)
     }
@@ -434,5 +436,15 @@ final class EnvViewModel: ObservableObject {
             target.workingVariables = oldValue
             target.isUndoing = false
         }
+    }
+
+    func sendFileChangedNotification(fileName: String) {
+        guard !NSApp.isActive else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "File Changed"
+        content.body = "\(fileName) was modified externally."
+        content.sound = .default
+        let request = UNNotificationRequest(identifier: "file-changed-env", content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 }

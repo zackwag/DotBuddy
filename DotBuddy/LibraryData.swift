@@ -1,4 +1,6 @@
+import AppKit
 import Foundation
+import UserNotifications
 
 enum LibraryItemType: String, Codable {
     case alias
@@ -94,6 +96,7 @@ final class LibraryStore: ObservableObject {
             } catch {
                 loadBundledFallback()
                 isUsingBundledData = true
+                sendFetchFailedNotification()
             }
             isLoading = false
         }
@@ -110,6 +113,16 @@ final class LibraryStore: ObservableObject {
     private func loadBundledFallback() {
         aliasCategories = Self.bundledAliasCategories
         envCategories = Self.bundledEnvCategories
+    }
+
+    private func sendFetchFailedNotification() {
+        guard !NSApp.isActive else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "Library Unavailable"
+        content.body = "Couldn't fetch the latest library. Using bundled defaults."
+        content.sound = .default
+        let request = UNNotificationRequest(identifier: "library-fetch-failed", content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 
     static let bundledAliasCategories: [LibraryCategory] = [
