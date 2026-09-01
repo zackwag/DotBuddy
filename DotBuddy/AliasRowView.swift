@@ -9,6 +9,8 @@ struct AliasRowView: View {
     var onDuplicate: (() -> Void)?
     var dependencies: [String] = []
 
+    @State private var isRowHovered = false
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 1) {
@@ -37,19 +39,22 @@ struct AliasRowView: View {
                 help: alias.isEnabled ? "Disable alias" : "Enable alias"
             )
 
-            HoverButton(icon: "doc.on.doc", hoverColor: .accentColor, action: {
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(alias.command, forType: .string)
-            }, help: "Copy command")
+            if isRowHovered {
+                HoverButton(icon: "doc.on.doc", hoverColor: .accentColor, action: {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(alias.command, forType: .string)
+                }, help: "Copy command")
 
-            if let onDuplicate {
-                HoverButton(icon: "plus.square.on.square", hoverColor: .accentColor, action: onDuplicate, help: "Duplicate alias")
+                if let onDuplicate {
+                    HoverButton(icon: "plus.square.on.square", hoverColor: .accentColor, action: onDuplicate, help: "Duplicate alias")
+                }
+
+                HoverButton(icon: "pencil", hoverColor: .accentColor, action: onEdit, help: "Edit alias")
+
+                HoverButton(icon: "trash", hoverColor: .red, action: onDelete, help: "Delete")
             }
-
-            HoverButton(icon: "pencil", hoverColor: .accentColor, action: onEdit, help: "Edit alias")
-
-            HoverButton(icon: "trash", hoverColor: .red, action: onDelete, help: "Delete")
         }
         .padding(.vertical, 2)
+        .onHover { isRowHovered = $0 }
     }
 }

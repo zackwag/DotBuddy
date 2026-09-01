@@ -128,4 +128,41 @@ extension EnvContentView {
             viewModel.selectFile(url: url)
         }
     }
+
+    static func openSuggestIssue(variables: [EnvVariable]) {
+        let json = variables.map { v in
+            """
+            {"name": "\(v.name)", "value": "\(v.value)", "description": "", "type": "environment", "category": ""}
+            """
+        }.joined(separator: ",\n")
+
+        let body = """
+        **Suggested environment variables:**
+
+        ```json
+        [
+        \(json)
+        ]
+        ```
+
+        **Category:** (e.g. Shell, Development, Path Extensions, etc.)
+
+        **Description:** (optional context for these suggestions)
+        """
+
+        let title = "Library suggestion: \(variables.count) variable\(variables.count == 1 ? "" : "s")"
+        openGitHubIssue(title: title, body: body, label: "library")
+    }
+
+    private static func openGitHubIssue(title: String, body: String, label: String) {
+        var components = URLComponents(string: "https://github.com/zackwag/DotBuddy/issues/new")!
+        components.queryItems = [
+            URLQueryItem(name: "title", value: title),
+            URLQueryItem(name: "body", value: body),
+            URLQueryItem(name: "labels", value: label),
+        ]
+        if let url = components.url {
+            NSWorkspace.shared.open(url)
+        }
+    }
 }

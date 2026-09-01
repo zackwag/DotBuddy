@@ -120,6 +120,32 @@ export GITHUB_ACCESS_TOKEN="ghp_xxxx" # [secret]
 
 Lines prefixed with `##` are disabled entries — they are preserved in the file but inactive.
 
+## Contributing to the Snippet Library
+
+The snippet library lives in [`library/library.json`](library/library.json). To suggest new aliases or environment variables:
+
+1. Fork this repo
+2. Edit `library/library.json` — add your entries to an existing category or create a new one
+3. Open a pull request
+
+Each entry follows this format:
+
+```json
+{"name": "myalias", "value": "some command", "description": "What it does", "type": "alias", "category": "Category Name"}
+```
+
+Use `"type": "alias"` for aliases and `"type": "environment"` for environment variables. The `category` should match the `name` of the category array it belongs to.
+
+## Contributing to the Snippet Library
+
+To suggest new aliases or environment variables for the built-in library:
+
+1. Select aliases or environment variables using selection mode
+2. Click **Suggest for Library** in the action bar
+3. This opens a pre-filled GitHub issue — add a category and description, then submit
+
+You can also [open an issue](https://github.com/zackwag/DotBuddy/issues/new?labels=library) manually with your suggestions.
+
 ## Building from Source
 
 1. Clone the repo

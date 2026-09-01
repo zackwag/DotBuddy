@@ -7,6 +7,7 @@ struct BulkActionBar: View {
     let onDisable: () -> Void
     let onDelete: () -> Void
     let onSetGroup: (String) -> Void
+    var onSuggest: (() -> Void)?
     let onCancel: () -> Void
 
     @State private var newGroupName = ""
@@ -49,6 +50,15 @@ struct BulkActionBar: View {
                 Label("Delete", systemImage: "trash")
             }
             .controlSize(.small)
+
+            if let onSuggest {
+                Divider().frame(height: 16)
+
+                Button(action: onSuggest) {
+                    Label("Suggest for Library", systemImage: "paperplane")
+                }
+                .controlSize(.small)
+            }
 
             Spacer()
 

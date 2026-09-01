@@ -272,6 +272,10 @@ struct EnvContentView: View {
                         selectedVariables.removeAll()
                         selectionMode = false
                     },
+                    onSuggest: {
+                        let items = viewModel.workingVariables.filter { selectedVariables.contains($0.id) }
+                        Self.openSuggestIssue(variables: items)
+                    },
                     onCancel: {
                         selectedVariables.removeAll()
                         selectionMode = false

@@ -285,6 +285,10 @@ struct ContentView: View {
                         selectedAliases.removeAll()
                         selectionMode = false
                     },
+                    onSuggest: {
+                        let items = viewModel.workingAliases.filter { selectedAliases.contains($0.id) }
+                        Self.openSuggestIssue(aliases: items)
+                    },
                     onCancel: {
                         selectedAliases.removeAll()
                         selectionMode = false

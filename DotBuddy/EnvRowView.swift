@@ -13,6 +13,7 @@ struct EnvRowView: View {
     @State private var isRevealed = false
     @State private var authError: String?
     @State private var showAuthError = false
+    @State private var isRowHovered = false
 
     private var inferredType: ValueType {
         ValueType.infer(from: variable.value, name: variable.name)
@@ -55,35 +56,38 @@ struct EnvRowView: View {
                 help: variable.isEnabled ? "Disable variable" : "Enable variable"
             )
 
-            if variable.isSecret {
+            if isRowHovered {
+                if variable.isSecret {
+                    HoverButton(
+                        icon: isRevealed ? "eye.slash" : "eye",
+                        hoverColor: .accentColor,
+                        action: {
+                            if isRevealed { isRevealed = false } else { authenticate() }
+                        },
+                        help: isRevealed ? "Hide value" : "Reveal value (Touch ID)"
+                    )
+                }
+
+                HoverButton(icon: "doc.on.doc", hoverColor: .accentColor, action: copyValue, help: "Copy value")
+
                 HoverButton(
-                    icon: isRevealed ? "eye.slash" : "eye",
-                    hoverColor: .accentColor,
-                    action: {
-                        if isRevealed { isRevealed = false } else { authenticate() }
-                    },
-                    help: isRevealed ? "Hide value" : "Reveal value (Touch ID)"
+                    icon: variable.isSecret ? "lock.fill" : "lock.open",
+                    hoverColor: .orange,
+                    action: onToggleSecret,
+                    help: variable.isSecret ? "Mark as visible" : "Mark as secret"
                 )
+
+                if let onDuplicate {
+                    HoverButton(icon: "plus.square.on.square", hoverColor: .accentColor, action: onDuplicate, help: "Duplicate variable")
+                }
+
+                HoverButton(icon: "pencil", hoverColor: .accentColor, action: onEdit, help: "Edit variable")
+
+                HoverButton(icon: "trash", hoverColor: .red, action: onDelete, help: "Delete")
             }
-
-            HoverButton(icon: "doc.on.doc", hoverColor: .accentColor, action: copyValue, help: "Copy value")
-
-            HoverButton(
-                icon: variable.isSecret ? "lock.fill" : "lock.open",
-                hoverColor: .orange,
-                action: onToggleSecret,
-                help: variable.isSecret ? "Mark as visible" : "Mark as secret"
-            )
-
-            if let onDuplicate {
-                HoverButton(icon: "plus.square.on.square", hoverColor: .accentColor, action: onDuplicate, help: "Duplicate variable")
-            }
-
-            HoverButton(icon: "pencil", hoverColor: .accentColor, action: onEdit, help: "Edit variable")
-
-            HoverButton(icon: "trash", hoverColor: .red, action: onDelete, help: "Delete")
         }
         .padding(.vertical, 2)
+        .onHover { isRowHovered = $0 }
         .alert("Authentication Failed", isPresented: $showAuthError) {
             Button("OK") {}
         } message: {

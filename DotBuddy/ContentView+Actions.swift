@@ -129,4 +129,41 @@ extension ContentView {
             viewModel.selectFile(url: url)
         }
     }
+
+    static func openSuggestIssue(aliases: [Alias]) {
+        let json = aliases.map { alias in
+            """
+            {"name": "\(alias.name)", "value": "\(alias.command)", "description": "", "type": "alias", "category": ""}
+            """
+        }.joined(separator: ",\n")
+
+        let body = """
+        **Suggested aliases:**
+
+        ```json
+        [
+        \(json)
+        ]
+        ```
+
+        **Category:** (e.g. Git, Docker, Python, etc.)
+
+        **Description:** (optional context for these suggestions)
+        """
+
+        let title = "Library suggestion: \(aliases.count) alias\(aliases.count == 1 ? "" : "es")"
+        openGitHubIssue(title: title, body: body, label: "library")
+    }
+
+    private static func openGitHubIssue(title: String, body: String, label: String) {
+        var components = URLComponents(string: "https://github.com/zackwag/DotBuddy/issues/new")!
+        components.queryItems = [
+            URLQueryItem(name: "title", value: title),
+            URLQueryItem(name: "body", value: body),
+            URLQueryItem(name: "labels", value: label),
+        ]
+        if let url = components.url {
+            NSWorkspace.shared.open(url)
+        }
+    }
 }
