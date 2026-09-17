@@ -163,9 +163,11 @@ jobs:
             --body "Automated update from a DotBuddy release."
 
           pr_number=$(gh pr list --repo zackwag/homebrew-tap --head "$BRANCH" --json number -q '.[0].number')
+          sleep 20
           for i in $(seq 1 40); do
+            total=$(gh pr view "$pr_number" --repo zackwag/homebrew-tap --json statusCheckRollup -q '.statusCheckRollup | length')
             pending=$(gh pr view "$pr_number" --repo zackwag/homebrew-tap --json statusCheckRollup -q '[.statusCheckRollup[] | select(.status!="COMPLETED")] | length')
-            if [ "$pending" = "0" ]; then break; fi
+            if [ "$total" != "0" ] && [ "$pending" = "0" ]; then break; fi
             sleep 15
           done
 
