@@ -33,44 +33,55 @@ final class HistoryInsights: ObservableObject {
             FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".bash_history").path
         ]
 
-        var allLines: [String] = []
-        for path in historyPaths {
-            if let content = try? String(contentsOfFile: path, encoding: .utf8) {
-                allLines = content.components(separatedBy: .newlines)
-            } else if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
-                      let content = String(data: data, encoding: .ascii) {
-                allLines = content.components(separatedBy: .newlines)
-            } else {
-                continue
-            }
-            break
-        }
-
+        let allLines = readHistoryLines(paths: historyPaths)
         guard !allLines.isEmpty else { return [] }
 
+        let counts = countCommands(in: allLines, existingAliases: existingAliases)
+        return buildSuggestions(from: counts, existingAliases: existingAliases)
+    }
+
+    private nonisolated static func readHistoryLines(paths: [String]) -> [String] {
+        for path in paths {
+            if let content = try? String(contentsOfFile: path, encoding: .utf8) {
+                return content.components(separatedBy: .newlines)
+            } else if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+                      let content = String(data: data, encoding: .ascii) {
+                return content.components(separatedBy: .newlines)
+            }
+        }
+        return []
+    }
+
+    private nonisolated static func countCommands(in lines: [String], existingAliases: [String: String]) -> [String: Int] {
         let aliasedCommands = Set(existingAliases.values)
 
         var counts: [String: Int] = [:]
-        for line in allLines {
-            var cmd = line
-            if cmd.hasPrefix(":") {
-                if let semicolonIndex = cmd.firstIndex(of: ";") {
-                    cmd = String(cmd[cmd.index(after: semicolonIndex)...])
-                } else {
-                    continue
-                }
-            }
-            cmd = cmd.trimmingCharacters(in: .whitespaces)
-            guard !cmd.isEmpty, cmd.count > 3, !cmd.contains("&&"), !cmd.contains("|") else { continue }
-
-            let parts = cmd.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-            guard parts.count >= 2, parts.count <= 5 else { continue }
-
-            let normalized = parts.joined(separator: " ")
-            if aliasedCommands.contains(normalized) { continue }
+        for line in lines {
+            guard let normalized = normalizedCommand(from: line), !aliasedCommands.contains(normalized) else { continue }
             counts[normalized, default: 0] += 1
         }
+        return counts
+    }
 
+    private nonisolated static func normalizedCommand(from line: String) -> String? {
+        var cmd = line
+        if cmd.hasPrefix(":") {
+            guard let semicolonIndex = cmd.firstIndex(of: ";") else { return nil }
+            cmd = String(cmd[cmd.index(after: semicolonIndex)...])
+        }
+        cmd = cmd.trimmingCharacters(in: .whitespaces)
+        guard !cmd.isEmpty, cmd.count > 3, !cmd.contains("&&"), !cmd.contains("|") else { return nil }
+
+        let parts = cmd.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+        guard parts.count >= 2, parts.count <= 5 else { return nil }
+
+        return parts.joined(separator: " ")
+    }
+
+    private nonisolated static func buildSuggestions(
+        from counts: [String: Int],
+        existingAliases: [String: String]
+    ) -> [CommandSuggestion] {
         let existingNames = Set(existingAliases.keys)
         let filtered = counts
             .filter { $0.value >= 5 }
