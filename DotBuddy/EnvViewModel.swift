@@ -409,6 +409,7 @@ final class EnvViewModel: ObservableObject {
         }
     }
 
+    // swiftlint:disable:next force_try
     private static let envNamePattern = try! NSRegularExpression(pattern: "^[A-Za-z_][A-Za-z0-9_]*$")
 
     static func isValidEnvName(_ name: String) -> Bool {
