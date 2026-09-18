@@ -1,7 +1,8 @@
 name: Lint
 
-# Runs SwiftLint (configured via .swiftlint.yml) against the codebase,
-# mirroring the local Xcode build phase but enforced in CI.
+# Runs SwiftLint (configured via .swiftlint.yml) against the codebase.
+# --strict fails the build on warnings too, so the codebase stays at the
+# zero-violations baseline instead of silently accumulating new ones.
 
 on:
   pull_request:
@@ -22,4 +23,4 @@ jobs:
       - name: Run SwiftLint
         uses: docker://ghcr.io/realm/swiftlint:latest
         with:
-          args: lint --reporter github-actions-logging
+          args: lint --strict --reporter github-actions-logging
