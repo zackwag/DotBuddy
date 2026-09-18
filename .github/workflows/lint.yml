@@ -1,0 +1,25 @@
+name: Lint
+
+# Runs SwiftLint (configured via .swiftlint.yml) against the codebase,
+# mirroring the local Xcode build phase but enforced in CI.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  swiftlint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run SwiftLint
+        uses: docker://ghcr.io/realm/swiftlint:latest
+        with:
+          args: lint --reporter github-actions-logging
