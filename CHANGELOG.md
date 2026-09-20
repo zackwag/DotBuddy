@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/zackwag/DotBuddy/compare/v2.5.1...v2.6.0) (2026-09-20)
+
+
+### Features
+
+* Add SSH connection testing ([#16](https://github.com/zackwag/DotBuddy/issues/16)) ([40e6baf](https://github.com/zackwag/DotBuddy/commit/40e6baf3437ef549bb0a809566eb3275a3edccaa))
+
 ## [2.5.1](https://github.com/zackwag/DotBuddy/compare/v2.5.0...v2.5.1) (2026-09-20)
 
 
