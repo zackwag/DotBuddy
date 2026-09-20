@@ -104,11 +104,18 @@ jobs:
           cd $RUNNER_TEMP/export
           ditto -c -k --keepParent DotBuddy.app DotBuddy.zip
 
-      - name: Create release
-        uses: softprops/action-gh-release@v3
-        with:
-          files: ${{ runner.temp }}/export/DotBuddy.zip
-          generate_release_notes: true
+      - name: Attach app to the release-please-created release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in 1 2 3 4 5; do
+            if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+              break
+            fi
+            echo "Release for ${{ github.ref_name }} not found yet, retrying..."
+            sleep 5
+          done
+          gh release upload "${{ github.ref_name }}" "${{ runner.temp }}/export/DotBuddy.zip" --clobber
 
       - name: Update Homebrew tap
         env:
@@ -116,9 +123,11 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           SHA=$(shasum -a 256 $RUNNER_TEMP/export/DotBuddy.zip | awk '{print $1}')
+          BRANCH="update-dotbuddy-${VERSION}"
 
           git clone https://x-access-token:${TAP_TOKEN}@github.com/zackwag/homebrew-tap.git /tmp/tap
           cd /tmp/tap
+          git checkout -b "$BRANCH"
 
           cat > Casks/dotbuddy.rb << EOF
           cask "dotbuddy" do
@@ -144,5 +153,28 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Casks/dotbuddy.rb
-          git commit -m "Update DotBuddy to ${VERSION}"
-          git push
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(dotbuddy): update to ${VERSION}"
+          git push origin "$BRANCH"
+
+          export GH_TOKEN="$TAP_TOKEN"
+          gh pr create --repo zackwag/homebrew-tap --base main --head "$BRANCH" \
+            --title "chore(dotbuddy): update to ${VERSION}" \
+            --body "Automated update from a DotBuddy release."
+
+          pr_number=$(gh pr list --repo zackwag/homebrew-tap --head "$BRANCH" --json number -q '.[0].number')
+          sleep 20
+          for i in $(seq 1 40); do
+            total=$(gh pr view "$pr_number" --repo zackwag/homebrew-tap --json statusCheckRollup -q '.statusCheckRollup | length')
+            pending=$(gh pr view "$pr_number" --repo zackwag/homebrew-tap --json statusCheckRollup -q '[.statusCheckRollup[] | select(.status!="COMPLETED")] | length')
+            if [ "$total" != "0" ] && [ "$pending" = "0" ]; then break; fi
+            sleep 15
+          done
+
+          bad=$(gh pr view "$pr_number" --repo zackwag/homebrew-tap --json statusCheckRollup -q '[.statusCheckRollup[] | select((.conclusion // "") | IN("SUCCESS","NEUTRAL","SKIPPED") | not)] | length')
+          if [ "$bad" != "0" ]; then
+            echo "::error::$bad check(s) did not succeed; leaving PR #$pr_number open for review."
+            exit 1
+          fi
+
+          gh pr merge "$pr_number" --repo zackwag/homebrew-tap --squash --delete-branch

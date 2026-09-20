@@ -27,49 +27,61 @@ final class HistoryInsights: ObservableObject {
         }
     }
 
-    private nonisolated static func loadHistoryLines() -> [String] {
+    private nonisolated static func parseHistory(existingAliases: [String: String]) -> [CommandSuggestion] {
         let home = FileManager.default.homeDirectoryForCurrentUser
-        let paths = [
+        let historyPaths = [
             home.appendingPathComponent(".zsh_history").path,
             home.appendingPathComponent(".bash_history").path
         ]
+
+        let allLines = readHistoryLines(paths: historyPaths)
+        guard !allLines.isEmpty else { return [] }
+
+        let counts = countCommands(in: allLines, existingAliases: existingAliases)
+        return buildSuggestions(from: counts, existingAliases: existingAliases)
+    }
+
+    private nonisolated static func readHistoryLines(paths: [String]) -> [String] {
         for path in paths {
             if let content = try? String(contentsOfFile: path, encoding: .utf8) {
                 return content.components(separatedBy: .newlines)
-            }
-            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
-               let content = String(data: data, encoding: .ascii) {
+            } else if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+                      let content = String(data: data, encoding: .ascii) {
                 return content.components(separatedBy: .newlines)
             }
         }
         return []
     }
 
-    private nonisolated static func normalizeHistoryLine(_ line: String) -> String? {
+    private nonisolated static func countCommands(in lines: [String], existingAliases: [String: String]) -> [String: Int] {
+        let aliasedCommands = Set(existingAliases.values)
+        var counts: [String: Int] = [:]
+        for line in lines {
+            guard let normalized = normalizedCommand(from: line), !aliasedCommands.contains(normalized) else { continue }
+            counts[normalized, default: 0] += 1
+        }
+        return counts
+    }
+
+    private nonisolated static func normalizedCommand(from line: String) -> String? {
         var cmd = line
         if cmd.hasPrefix(":") {
-            guard let idx = cmd.firstIndex(of: ";") else { return nil }
-            cmd = String(cmd[cmd.index(after: idx)...])
+            guard let semicolonIndex = cmd.firstIndex(of: ";") else { return nil }
+            cmd = String(cmd[cmd.index(after: semicolonIndex)...])
         }
         cmd = cmd.trimmingCharacters(in: .whitespaces)
         guard !cmd.isEmpty, cmd.count > 3, !cmd.contains("&&"), !cmd.contains("|") else { return nil }
+
         let parts = cmd.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
         guard parts.count >= 2, parts.count <= 5 else { return nil }
+
         return parts.joined(separator: " ")
     }
 
-    private nonisolated static func parseHistory(existingAliases: [String: String]) -> [CommandSuggestion] {
-        let allLines = loadHistoryLines()
-        guard !allLines.isEmpty else { return [] }
-
-        let aliasedCommands = Set(existingAliases.values)
-        var counts: [String: Int] = [:]
-        for line in allLines {
-            guard let normalized = normalizeHistoryLine(line),
-                  !aliasedCommands.contains(normalized) else { continue }
-            counts[normalized, default: 0] += 1
-        }
-
+    private nonisolated static func buildSuggestions(
+        from counts: [String: Int],
+        existingAliases: [String: String]
+    ) -> [CommandSuggestion] {
         let existingNames = Set(existingAliases.keys)
         var usedNames: Set<String> = []
         var result: [CommandSuggestion] = []
