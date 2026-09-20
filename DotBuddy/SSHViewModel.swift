@@ -16,6 +16,10 @@ final class SSHViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var showError = false
     @Published var fileChangedExternally = false
+    @Published var connectionStatuses: [UUID: SSHConnectionStatus] = [:]
+    @Published var testAllResults: [SSHConnectionResult] = []
+    @Published var isTestingAll = false
+    @Published var showTestAllResults = false
     private var fileWatcher: FileWatcher?
     private var suppressNextWatch = false
 
@@ -365,6 +369,76 @@ final class SSHViewModel: ObservableObject {
             workingHosts.filter { selected.contains($0.id) }
         } ?? workingHosts
         return SSHConfigFileManager.serialize(hosts: items)
+    }
+
+    // MARK: - Connection Testing
+
+    func testConnection(for host: SSHHost) {
+        connectionStatuses[host.id] = .testing
+
+        let config = SSHConnectionTester.TestConfig(hostPattern: host.hostPattern)
+
+        Task.detached {
+            let success = SSHConnectionTester.test(config: config)
+
+            await MainActor.run {
+                self.connectionStatuses[host.id] = success ? .success : .failure
+
+                Task {
+                    try? await Task.sleep(for: .seconds(4))
+                    self.connectionStatuses[host.id] = .idle
+                }
+            }
+        }
+    }
+
+    func testAllConnections() {
+        let enabledHosts = workingHosts.filter(\.isEnabled)
+        guard !enabledHosts.isEmpty else { return }
+
+        isTestingAll = true
+        testAllResults = enabledHosts.map {
+            SSHConnectionResult(id: $0.id, hostPattern: $0.hostPattern, status: .testing)
+        }
+        showTestAllResults = true
+
+        Task.detached {
+            for host in enabledHosts {
+                let config = SSHConnectionTester.TestConfig(hostPattern: host.hostPattern)
+
+                await MainActor.run {
+                    self.connectionStatuses[host.id] = .testing
+                    if let index = self.testAllResults.firstIndex(where: { $0.id == host.id }) {
+                        self.testAllResults[index] = SSHConnectionResult(
+                            id: host.id, hostPattern: host.hostPattern, status: .testing
+                        )
+                    }
+                }
+
+                let success = SSHConnectionTester.test(config: config)
+                let status: SSHConnectionStatus = success ? .success : .failure
+
+                await MainActor.run {
+                    self.connectionStatuses[host.id] = status
+                    if let index = self.testAllResults.firstIndex(where: { $0.id == host.id }) {
+                        self.testAllResults[index] = SSHConnectionResult(
+                            id: host.id, hostPattern: host.hostPattern, status: status
+                        )
+                    }
+                }
+            }
+
+            await MainActor.run {
+                self.isTestingAll = false
+
+                Task {
+                    try? await Task.sleep(for: .seconds(6))
+                    for host in enabledHosts where self.connectionStatuses[host.id] != .testing {
+                        self.connectionStatuses[host.id] = .idle
+                    }
+                }
+            }
+        }
     }
 
     private func showError(message: String) {

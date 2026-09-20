@@ -34,6 +34,19 @@ extension SSHContentView {
         }
 
         ToolbarItem(placement: .primaryAction) {
+            Button(action: { viewModel.testAllConnections() }) {
+                Label("Test All", systemImage: "antenna.radiowaves.left.and.right")
+            }
+            .keyboardShortcut("t", modifiers: [.command, .shift])
+            .help("Test all enabled host connections (Cmd+Shift+T)")
+            .disabled(
+                !viewModel.hasFile ||
+                viewModel.workingHosts.filter(\.isEnabled).isEmpty ||
+                viewModel.isTestingAll
+            )
+        }
+
+        ToolbarItem(placement: .primaryAction) {
             Button(action: exportHosts) {
                 Label("Export", systemImage: "square.and.arrow.up")
             }

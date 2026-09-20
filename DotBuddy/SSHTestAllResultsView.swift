@@ -4,6 +4,7 @@ struct SSHTestAllResultsView: View {
     let results: [SSHConnectionResult]
     let isTesting: Bool
     let onDismiss: () -> Void
+    let onDeleteHosts: (Set<UUID>) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -55,6 +56,17 @@ struct SSHTestAllResultsView: View {
                     Spacer()
 
                     resultLabel(for: result.status)
+
+                    if result.status == .failure {
+                        Button {
+                            onDeleteHosts(Set([result.id]))
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundStyle(.red)
+                        }
+                        .buttonStyle(.borderless)
+                        .help("Remove this host")
+                    }
                 }
                 .padding(.vertical, 2)
             }
@@ -101,8 +113,18 @@ struct SSHTestAllResultsView: View {
         }
     }
 
+    private var failedIDs: Set<UUID> {
+        Set(results.filter { $0.status == .failure }.map(\.id))
+    }
+
     private var footer: some View {
         HStack {
+            if !isTesting && !failedIDs.isEmpty {
+                Button("Delete All Failed") {
+                    onDeleteHosts(failedIDs)
+                }
+                .foregroundStyle(.red)
+            }
             Spacer()
             Button("Close", action: onDismiss)
                 .keyboardShortcut(.escape, modifiers: [])

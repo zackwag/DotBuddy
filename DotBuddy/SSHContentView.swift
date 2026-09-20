@@ -121,6 +121,17 @@ struct SSHContentView: View {
                     showKeyGenerator = false
                 }
             }
+            .sheet(isPresented: $viewModel.showTestAllResults) {
+                SSHTestAllResultsView(
+                    results: viewModel.testAllResults,
+                    isTesting: viewModel.isTestingAll,
+                    onDismiss: { viewModel.showTestAllResults = false },
+                    onDeleteHosts: { ids in
+                        viewModel.bulkDelete(ids)
+                        viewModel.testAllResults.removeAll { ids.contains($0.id) }
+                    }
+                )
+            }
     }
 
     var noFileState: some View {
@@ -266,13 +277,15 @@ struct SSHContentView: View {
                             }
                             SSHHostRowView(
                                 host: host,
+                                connectionStatus: viewModel.connectionStatuses[host.id] ?? .idle,
                                 onEdit: { beginEditing(host) },
                                 onDelete: {
                                     hostToDelete = host
                                     showDeleteConfirmation = true
                                 },
                                 onToggleEnabled: { viewModel.toggleEnabled(host) },
-                                onDuplicate: { viewModel.duplicateHost(host) }
+                                onDuplicate: { viewModel.duplicateHost(host) },
+                                onTestConnection: { viewModel.testConnection(for: host) }
                             )
                         }
                         .contentShape(Rectangle())

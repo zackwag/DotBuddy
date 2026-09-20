@@ -3,10 +3,12 @@ import SwiftUI
 
 struct SSHHostRowView: View {
     let host: SSHHost
+    let connectionStatus: SSHConnectionStatus
     let onEdit: () -> Void
     let onDelete: () -> Void
     let onToggleEnabled: () -> Void
     var onDuplicate: (() -> Void)?
+    var onTestConnection: (() -> Void)?
 
     @State private var isRowHovered = false
 
@@ -25,6 +27,8 @@ struct SSHHostRowView: View {
                             .padding(.vertical, 1)
                             .background(.orange.opacity(0.12), in: Capsule())
                     }
+
+                    connectionStatusIndicator
                 }
 
                 Text(host.summary)
@@ -44,13 +48,28 @@ struct SSHHostRowView: View {
             )
 
             if isRowHovered {
+                if let onTestConnection {
+                    HoverButton(
+                        icon: "antenna.radiowaves.left.and.right",
+                        hoverColor: .teal,
+                        action: onTestConnection,
+                        help: "Test connection"
+                    )
+                    .disabled(connectionStatus == .testing)
+                }
+
                 HoverButton(icon: "doc.on.doc", hoverColor: .accentColor, action: {
                     NSPasteboard.general.clearContents()
                     NSPasteboard.general.setString("ssh \(host.hostPattern)", forType: .string)
                 }, help: "Copy SSH command")
 
                 if let onDuplicate {
-                    HoverButton(icon: "plus.square.on.square", hoverColor: .accentColor, action: onDuplicate, help: "Duplicate host")
+                    HoverButton(
+                        icon: "plus.square.on.square",
+                        hoverColor: .accentColor,
+                        action: onDuplicate,
+                        help: "Duplicate host"
+                    )
                 }
 
                 HoverButton(icon: "pencil", hoverColor: .accentColor, action: onEdit, help: "Edit host")
@@ -60,5 +79,26 @@ struct SSHHostRowView: View {
         }
         .padding(.vertical, 2)
         .onHover { isRowHovered = $0 }
+    }
+
+    @ViewBuilder
+    private var connectionStatusIndicator: some View {
+        switch connectionStatus {
+        case .idle:
+            EmptyView()
+        case .testing:
+            ProgressView()
+                .controlSize(.mini)
+        case .success:
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 10))
+                .foregroundStyle(.green)
+                .transition(.scale.combined(with: .opacity))
+        case .failure:
+            Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 10))
+                .foregroundStyle(.red)
+                .transition(.scale.combined(with: .opacity))
+        }
     }
 }
