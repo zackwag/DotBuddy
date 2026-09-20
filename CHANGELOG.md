@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.5.1](https://github.com/zackwag/DotBuddy/compare/v2.5.0...v2.5.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* add missing CommandConflictChecker pbxproj entries ([#20](https://github.com/zackwag/DotBuddy/issues/20)) ([87f1498](https://github.com/zackwag/DotBuddy/commit/87f1498d15ae5b9c0777583c84f0d686d71230f4))
+
+## [2.5.0](https://github.com/zackwag/DotBuddy/compare/v2.4.0...v2.5.0) (2026-09-20)
+
+
+### Features
+
+* Add shell profile source detection ([#15](https://github.com/zackwag/DotBuddy/issues/15)) ([1438aaa](https://github.com/zackwag/DotBuddy/commit/1438aaa0bcbd9ba3ff26cbde1812a1f102893499))
+
+
+### Bug Fixes
+
+* use bare string for single-element zap trash in Cask template ([#18](https://github.com/zackwag/DotBuddy/issues/18)) ([3af719a](https://github.com/zackwag/DotBuddy/commit/3af719a5ee4763f0c4be50d046e012152eb53129))
+
 ## [2.4.0](https://github.com/zackwag/DotBuddy/compare/v2.3.0...v2.4.0) (2026-09-20)
 
 

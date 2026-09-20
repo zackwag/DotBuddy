@@ -14,6 +14,7 @@ let package = Package(
                 "CommandConflictChecker.swift",
                 "EnvVariable.swift",
                 "EnvFileManager.swift",
+                "ShellProfileDetector.swift",
                 "SSHHost.swift",
                 "SSHConfigFileManager.swift",
                 "KnownHost.swift",
