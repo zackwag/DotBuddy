@@ -8,6 +8,7 @@ struct AliasRowView: View {
     let onToggleEnabled: () -> Void
     var onDuplicate: (() -> Void)?
     var dependencies: [String] = []
+    var shadowedPath: String?
 
     @State private var isRowHovered = false
 
@@ -17,6 +18,12 @@ struct AliasRowView: View {
                 HStack(spacing: 4) {
                     Text(alias.name)
                         .font(.subheadline.bold())
+                    if let shadowedPath {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                            .help("Shadows \(shadowedPath)")
+                    }
                     if !dependencies.isEmpty {
                         Text("uses \(dependencies.joined(separator: ", "))")
                             .font(.caption2)
