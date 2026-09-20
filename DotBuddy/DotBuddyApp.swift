@@ -7,6 +7,8 @@ struct DotBuddyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var aliasViewModel = AliasViewModel()
     @StateObject private var envViewModel = EnvViewModel()
+    @StateObject private var sshViewModel = SSHViewModel()
+    @StateObject private var knownHostsViewModel = KnownHostsViewModel()
     @StateObject private var libraryStore = LibraryStore()
     @State private var activeSection: AppSection?
     @State private var menuBarSearch = ""
@@ -20,6 +22,10 @@ struct DotBuddyApp: App {
                         ContentView(viewModel: aliasViewModel, libraryStore: libraryStore, onBack: { activeSection = nil })
                     case .environment:
                         EnvContentView(viewModel: envViewModel, libraryStore: libraryStore, onBack: { activeSection = nil })
+                    case .sshConfig:
+                        SSHContentView(viewModel: sshViewModel, onBack: { activeSection = nil })
+                    case .knownHosts:
+                        KnownHostsContentView(viewModel: knownHostsViewModel, onBack: { activeSection = nil })
                     case .library:
                         LibraryView(
                             aliasViewModel: aliasViewModel,
@@ -32,6 +38,8 @@ struct DotBuddyApp: App {
                     HomeView(
                         aliasViewModel: aliasViewModel,
                         envViewModel: envViewModel,
+                        sshViewModel: sshViewModel,
+                        knownHostsViewModel: knownHostsViewModel,
                         activeSection: $activeSection
                     )
                 }
@@ -41,8 +49,12 @@ struct DotBuddyApp: App {
                 AppDelegate.shared = appDelegate
                 appDelegate.aliasViewModel = aliasViewModel
                 appDelegate.envViewModel = envViewModel
+                appDelegate.sshViewModel = sshViewModel
+                appDelegate.knownHostsViewModel = knownHostsViewModel
                 aliasViewModel.loadAliases()
                 envViewModel.loadVariables()
+                sshViewModel.loadHosts()
+                knownHostsViewModel.loadHosts()
                 libraryStore.load()
             }
         }
@@ -67,32 +79,7 @@ struct DotBuddyApp: App {
                 .textFieldStyle(.roundedBorder)
                 .padding(8)
 
-            let query = menuBarSearch.lowercased()
-            let aliases = aliasViewModel.workingAliases.filter { alias in
-                query.isEmpty || alias.name.lowercased().contains(query) || alias.command.lowercased().contains(query)
-            }
-            let variables = envViewModel.workingVariables.filter { v in
-                query.isEmpty || v.name.lowercased().contains(query) || v.value.lowercased().contains(query)
-            }
-
-            if aliases.isEmpty && variables.isEmpty {
-                Text("No matches")
-                    .foregroundStyle(.secondary)
-                    .padding()
-            } else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        if !aliases.isEmpty {
-                            menuBarAliasSection(aliases: Array(aliases.prefix(10)))
-                        }
-
-                        if !variables.isEmpty {
-                            menuBarEnvSection(variables: Array(variables.prefix(10)))
-                        }
-                    }
-                }
-                .frame(maxHeight: 300)
-            }
+            menuBarSearchResults
 
             Divider()
 
@@ -106,6 +93,42 @@ struct DotBuddyApp: App {
                 }
             }
             .padding(8)
+        }
+    }
+
+    private var menuBarSearchResults: some View {
+        let query = menuBarSearch.lowercased()
+        let aliases = aliasViewModel.workingAliases.filter { alias in
+            query.isEmpty || alias.name.lowercased().contains(query) || alias.command.lowercased().contains(query)
+        }
+        let variables = envViewModel.workingVariables.filter { v in
+            query.isEmpty || v.name.lowercased().contains(query) || v.value.lowercased().contains(query)
+        }
+        let sshHosts = sshViewModel.workingHosts.filter { host in
+            query.isEmpty || host.hostPattern.lowercased().contains(query) || host.hostname.lowercased().contains(query)
+        }
+
+        return Group {
+            if aliases.isEmpty && variables.isEmpty && sshHosts.isEmpty {
+                Text("No matches")
+                    .foregroundStyle(.secondary)
+                    .padding()
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        if !aliases.isEmpty {
+                            menuBarAliasSection(aliases: Array(aliases.prefix(10)))
+                        }
+                        if !variables.isEmpty {
+                            menuBarEnvSection(variables: Array(variables.prefix(10)))
+                        }
+                        if !sshHosts.isEmpty {
+                            menuBarSSHSection(hosts: Array(sshHosts.prefix(10)))
+                        }
+                    }
+                }
+                .frame(maxHeight: 300)
+            }
         }
     }
 
@@ -194,12 +217,56 @@ struct DotBuddyApp: App {
         }
     }
 
+    private func menuBarSSHSection(hosts: [SSHHost]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("SSH Hosts")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 8)
+                .padding(.top, 6)
+                .padding(.bottom, 2)
+            ForEach(hosts) { host in
+                HStack(spacing: 6) {
+                    Button {
+                        sshViewModel.toggleEnabled(host)
+                    } label: {
+                        Image(systemName: host.isEnabled ? "checkmark.circle.fill" : "circle")
+                            .foregroundStyle(host.isEnabled ? .green : .secondary)
+                    }
+                    .buttonStyle(.borderless)
+                    .help(host.isEnabled ? "Disable" : "Enable")
+
+                    Button {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString("ssh \(host.hostPattern)", forType: .string)
+                    } label: {
+                        HStack {
+                            Text(host.hostPattern)
+                                .font(.system(.body, design: .monospaced).bold())
+                                .opacity(host.isEnabled ? 1 : 0.5)
+                            Spacer()
+                            Text(host.summary)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .help("Click to copy SSH command")
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+            }
+        }
+    }
+
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     static var shared: AppDelegate?
     var aliasViewModel: AliasViewModel?
     var envViewModel: EnvViewModel?
+    var sshViewModel: SSHViewModel?
+    var knownHostsViewModel: KnownHostsViewModel?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let center = UNUserNotificationCenter.current()
@@ -207,7 +274,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         center.requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
         [.banner, .sound]
     }
 
@@ -218,8 +288,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         let aliasUnsaved = aliasViewModel?.hasUnsavedChanges ?? false
         let envUnsaved = envViewModel?.hasUnsavedChanges ?? false
+        let sshUnsaved = sshViewModel?.hasUnsavedChanges ?? false
+        let knownHostsUnsaved = knownHostsViewModel?.hasUnsavedChanges ?? false
 
-        guard aliasUnsaved || envUnsaved else {
+        guard aliasUnsaved || envUnsaved || sshUnsaved || knownHostsUnsaved else {
             return .terminateNow
         }
 
@@ -236,6 +308,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         case .alertFirstButtonReturn:
             if aliasUnsaved { aliasViewModel?.saveChanges() }
             if envUnsaved { envViewModel?.saveChanges() }
+            if sshUnsaved { sshViewModel?.saveChanges() }
+            if knownHostsUnsaved { knownHostsViewModel?.saveChanges() }
             return .terminateNow
         case .alertSecondButtonReturn:
             return .terminateNow

@@ -3,12 +3,16 @@ import SwiftUI
 enum AppSection: Hashable {
     case aliases
     case environment
+    case sshConfig
+    case knownHosts
     case library
 }
 
 struct HomeView: View {
     @ObservedObject var aliasViewModel: AliasViewModel
     @ObservedObject var envViewModel: EnvViewModel
+    @ObservedObject var sshViewModel: SSHViewModel
+    @ObservedObject var knownHostsViewModel: KnownHostsViewModel
     @Binding var activeSection: AppSection?
     @StateObject private var historyInsights = HistoryInsights()
 
@@ -35,6 +39,13 @@ struct HomeView: View {
                     envCard
                 }
                 .padding(.top, 12)
+
+                HStack(alignment: .top, spacing: 16) {
+                    sshConfigCard
+                    knownHostsCard
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 4)
 
                 libraryCard
                     .padding(.top, 4)
@@ -130,6 +141,104 @@ struct HomeView: View {
             }
             .padding()
             .frame(minWidth: 180, maxWidth: 240, alignment: .leading)
+            .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
+        }
+        .buttonStyle(CardButtonStyle())
+    }
+
+    private var sshConfigCard: some View {
+        Button(action: { activeSection = .sshConfig }) {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Image(systemName: "lock.shield")
+                        .font(.title2)
+                        .foregroundStyle(.teal)
+                    Spacer()
+                    Text("\(sshViewModel.hosts.count)")
+                        .font(.title.bold())
+                        .foregroundStyle(.primary)
+                }
+
+                Text("SSH Config")
+                    .font(.headline)
+
+                if sshViewModel.hasFile {
+                    Text(sshConfigFileName)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Divider()
+
+                    groupList(for: sshViewModel.groups, limit: 4)
+                } else {
+                    Text("Not configured")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding()
+            .frame(minWidth: 180, maxWidth: 240, maxHeight: .infinity, alignment: .leading)
+            .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
+        }
+        .buttonStyle(CardButtonStyle())
+    }
+
+    private var knownHostsCard: some View {
+        Button(action: { activeSection = .knownHosts }) {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Image(systemName: "key.viewfinder")
+                        .font(.title2)
+                        .foregroundStyle(.indigo)
+                    Spacer()
+                    Text("\(knownHostsViewModel.hosts.count)")
+                        .font(.title.bold())
+                        .foregroundStyle(.primary)
+                }
+
+                Text("Known Hosts")
+                    .font(.headline)
+
+                if knownHostsViewModel.hasFile {
+                    Text(knownHostsFileName)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Divider()
+
+                    let hashedCount = knownHostsViewModel.hosts.filter(\.isHashed).count
+                    let keyTypes = Set(knownHostsViewModel.hosts.map(\.keyType))
+                    VStack(alignment: .leading, spacing: 3) {
+                        ForEach(Array(keyTypes.prefix(4)).sorted(), id: \.self) { keyType in
+                            HStack(spacing: 4) {
+                                Circle()
+                                    .fill(.secondary.opacity(0.4))
+                                    .frame(width: 5, height: 5)
+                                Text(keyType)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        if hashedCount > 0 {
+                            Text("\(hashedCount) hashed")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                } else {
+                    Text("Not configured")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding()
+            .frame(minWidth: 180, maxWidth: 240, maxHeight: .infinity, alignment: .leading)
             .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
         }
@@ -234,6 +343,16 @@ struct HomeView: View {
 
     private var envFileName: String {
         guard let path = envViewModel.filePath else { return "" }
+        return (path as NSString).lastPathComponent
+    }
+
+    private var sshConfigFileName: String {
+        guard let path = sshViewModel.filePath else { return "" }
+        return (path as NSString).lastPathComponent
+    }
+
+    private var knownHostsFileName: String {
+        guard let path = knownHostsViewModel.filePath else { return "" }
         return (path as NSString).lastPathComponent
     }
 

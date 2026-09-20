@@ -74,7 +74,7 @@ extension ContentView {
                 }) {
                     let allSelected = !viewModel.displayedAliases.isEmpty && selectedAliases == Set(viewModel.displayedAliases.map(\.id))
                     Label(allSelected ? "Deselect All" : "Select All",
-                          systemImage: allSelected ? "minus.circle" : "checkmark.circle.badge.checkmark")
+                          systemImage: allSelected ? "minus.circle" : "checklist.checked")
                 }
                 .help("Select or deselect all visible aliases")
             }
