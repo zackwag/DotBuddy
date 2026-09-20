@@ -125,7 +125,11 @@ struct SSHContentView: View {
                 SSHTestAllResultsView(
                     results: viewModel.testAllResults,
                     isTesting: viewModel.isTestingAll,
-                    onDismiss: { viewModel.showTestAllResults = false }
+                    onDismiss: { viewModel.showTestAllResults = false },
+                    onDeleteHosts: { ids in
+                        viewModel.bulkDelete(ids)
+                        viewModel.testAllResults.removeAll { ids.contains($0.id) }
+                    }
                 )
             }
     }

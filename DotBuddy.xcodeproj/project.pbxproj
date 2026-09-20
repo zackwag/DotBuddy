@@ -48,6 +48,7 @@
 		D60001042E0A000C005580E9 /* KnownHostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */; };
 		D60001062E0A000D005580E9 /* KnownHostsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001072E0A000D005580E9 /* KnownHostsContentView.swift */; };
 		D60001082E0A000E005580E9 /* KnownHostRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001092E0A000E005580E9 /* KnownHostRowView.swift */; };
+		D60000012DA00001005580E9 /* CommandConflictChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000022DA00001005580E9 /* CommandConflictChecker.swift */; };
 		E70001002F0B0001005580E9 /* SSHConnectionTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70001012F0B0001005580E9 /* SSHConnectionTester.swift */; };
 		E70001022F0B0002005580E9 /* SSHTestAllResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70001032F0B0002005580E9 /* SSHTestAllResultsView.swift */; };
 /* End PBXBuildFile section */
@@ -96,6 +97,7 @@
 		D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsViewModel.swift; sourceTree = "<group>"; };
 		D60001072E0A000D005580E9 /* KnownHostsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsContentView.swift; sourceTree = "<group>"; };
 		D60001092E0A000E005580E9 /* KnownHostRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostRowView.swift; sourceTree = "<group>"; };
+		D60000022DA00001005580E9 /* CommandConflictChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandConflictChecker.swift; sourceTree = "<group>"; };
 		E70001012F0B0001005580E9 /* SSHConnectionTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHConnectionTester.swift; sourceTree = "<group>"; };
 		E70001032F0B0002005580E9 /* SSHTestAllResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHTestAllResultsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
