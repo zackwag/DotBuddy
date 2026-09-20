@@ -16,6 +16,7 @@ final class AliasViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var showError = false
     @Published var showSourceReminder = false
+    @Published var isSourced = true
     @Published var fileChangedExternally = false
     private var fileWatcher: FileWatcher?
     private var suppressNextWatch = false
@@ -180,8 +181,28 @@ final class AliasViewModel: ObservableObject {
                 applySort()
             }
             startWatching(path: filePath)
+            checkSourced()
         } catch {
             showError(message: "Failed to load aliases: \(error.localizedDescription)")
+        }
+    }
+
+    func checkSourced() {
+        guard let filePath else {
+            isSourced = true
+            return
+        }
+        isSourced = ShellProfileDetector.isSourced(filePath: filePath)
+    }
+
+    func fixSourced() {
+        guard let filePath else { return }
+        let profile = ShellProfileDetector.firstExistingProfile()
+        do {
+            try ShellProfileDetector.addSourceLine(filePath: filePath, toProfile: profile)
+            isSourced = true
+        } catch {
+            showError(message: "Failed to update \(profile): \(error.localizedDescription)")
         }
     }
 

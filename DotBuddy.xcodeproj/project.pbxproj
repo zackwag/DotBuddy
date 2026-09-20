@@ -34,9 +34,7 @@
 		C50000032D900002005580E9 /* ContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000042D900002005580E9 /* ContentView+Actions.swift */; };
 		C50000052D900003005580E9 /* EnvContentView+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */; };
 		C50000072D900004005580E9 /* EnvContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000082D900004005580E9 /* EnvContentView+Actions.swift */; };
-<<<<<<< HEAD
-		D60000012DA00001005580E9 /* CommandConflictChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000022DA00001005580E9 /* CommandConflictChecker.swift */; };
-=======
+		D60000012DA50001005580E9 /* ShellProfileDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000022DA50001005580E9 /* ShellProfileDetector.swift */; };
 		D50001002E0A0001005580E9 /* SSHHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001012E0A0001005580E9 /* SSHHost.swift */; };
 		D50001022E0A0002005580E9 /* SSHConfigFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001032E0A0002005580E9 /* SSHConfigFileManager.swift */; };
 		D50001042E0A0003005580E9 /* SSHViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001052E0A0003005580E9 /* SSHViewModel.swift */; };
@@ -51,7 +49,6 @@
 		D60001042E0A000C005580E9 /* KnownHostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */; };
 		D60001062E0A000D005580E9 /* KnownHostsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001072E0A000D005580E9 /* KnownHostsContentView.swift */; };
 		D60001082E0A000E005580E9 /* KnownHostRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001092E0A000E005580E9 /* KnownHostRowView.swift */; };
->>>>>>> origin/main
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,9 +81,7 @@
 		C50000042D900002005580E9 /* ContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+Actions.swift"; sourceTree = "<group>"; };
 		C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvContentView+Toolbar.swift"; sourceTree = "<group>"; };
 		C50000082D900004005580E9 /* EnvContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvContentView+Actions.swift"; sourceTree = "<group>"; };
-<<<<<<< HEAD
-		D60000022DA00001005580E9 /* CommandConflictChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandConflictChecker.swift; sourceTree = "<group>"; };
-=======
+		D60000022DA50001005580E9 /* ShellProfileDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellProfileDetector.swift; sourceTree = "<group>"; };
 		D50001012E0A0001005580E9 /* SSHHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHHost.swift; sourceTree = "<group>"; };
 		D50001032E0A0002005580E9 /* SSHConfigFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHConfigFileManager.swift; sourceTree = "<group>"; };
 		D50001052E0A0003005580E9 /* SSHViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHViewModel.swift; sourceTree = "<group>"; };
@@ -101,7 +96,6 @@
 		D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsViewModel.swift; sourceTree = "<group>"; };
 		D60001072E0A000D005580E9 /* KnownHostsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsContentView.swift; sourceTree = "<group>"; };
 		D60001092E0A000E005580E9 /* KnownHostRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostRowView.swift; sourceTree = "<group>"; };
->>>>>>> origin/main
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +153,7 @@
 				A421032D2C625F7B005580E9 /* BulkActionBar.swift */,
 				B40000032C625F7C005580E9 /* FileWatcher.swift */,
 				B40000052C625F7D005580E9 /* HistoryInsights.swift */,
+				D60000022DA50001005580E9 /* ShellProfileDetector.swift */,
 				D50001012E0A0001005580E9 /* SSHHost.swift */,
 				D50001032E0A0002005580E9 /* SSHConfigFileManager.swift */,
 				D50001052E0A0003005580E9 /* SSHViewModel.swift */,
@@ -306,6 +301,7 @@
 				A421032C2C625F7B005580E9 /* BulkActionBar.swift in Sources */,
 				B40000022C625F7C005580E9 /* FileWatcher.swift in Sources */,
 				B40000042C625F7D005580E9 /* HistoryInsights.swift in Sources */,
+				D60000012DA50001005580E9 /* ShellProfileDetector.swift in Sources */,
 				D50001002E0A0001005580E9 /* SSHHost.swift in Sources */,
 				D50001022E0A0002005580E9 /* SSHConfigFileManager.swift in Sources */,
 				D50001042E0A0003005580E9 /* SSHViewModel.swift in Sources */,
