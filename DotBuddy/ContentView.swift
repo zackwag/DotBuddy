@@ -358,7 +358,8 @@ struct ContentView: View {
                                 },
                                 onToggleEnabled: { viewModel.toggleEnabled(alias) },
                                 onDuplicate: { viewModel.duplicateAlias(alias) },
-                                dependencies: viewModel.dependencies(of: alias)
+                                dependencies: viewModel.dependencies(of: alias),
+                                shadowedPath: viewModel.conflictsWithCommand(alias.name)
                             )
                         }
                         .contentShape(Rectangle())

@@ -443,26 +443,18 @@ final class AliasViewModel: ObservableObject {
         return AliasFileManager.serialize(aliases: items)
     }
 
+    /// Returns the path of the system command that the given name shadows,
+    /// or `nil` if there is no conflict. Uses the shared cached checker.
+    nonisolated func conflictsWithCommand(_ name: String) -> String? {
+        CommandConflictChecker.shared.conflictingPath(for: name)
+    }
+
+    /// Returns a human-readable shadow warning string for the given alias
+    /// name, suitable for display in the UI. Returns `nil` when there is
+    /// no conflict.
     nonisolated func shadowWarning(for name: String) -> String? {
-        let trimmed = name.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty else { return nil }
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/which")
-        process.arguments = [trimmed]
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = FileHandle.nullDevice
-        do {
-            try process.run()
-            process.waitUntilExit()
-            let data = pipe.fileHandleForReading.availableData
-            if process.terminationStatus == 0,
-               let path = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
-               !path.isEmpty {
-                return "Shadows \(path)"
-            }
-        } catch {}
-        return nil
+        guard let path = conflictsWithCommand(name) else { return nil }
+        return "Shadows \(path)"
     }
 
     private var isUndoing = false
