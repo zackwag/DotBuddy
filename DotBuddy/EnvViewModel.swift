@@ -234,7 +234,10 @@ final class EnvViewModel: ObservableObject {
             newName = variable.name + "_COPY\(counter)"
             counter += 1
         }
-        let copy = EnvVariable(name: newName, value: variable.value, group: variable.group, isSecret: variable.isSecret, isEnabled: variable.isEnabled)
+        let copy = EnvVariable(
+            name: newName, value: variable.value, group: variable.group,
+            isSecret: variable.isSecret, isEnabled: variable.isEnabled
+        )
         if let index = workingVariables.firstIndex(where: { $0.id == variable.id }) {
             workingVariables.insert(copy, at: workingVariables.index(after: index))
         } else {
@@ -408,7 +411,10 @@ final class EnvViewModel: ObservableObject {
         }
     }
 
-    private static let envNamePattern = try! NSRegularExpression(pattern: "^[A-Za-z_][A-Za-z0-9_]*$")
+    private static let envNamePattern: NSRegularExpression = {
+        // swiftlint:disable:next force_try
+        try! NSRegularExpression(pattern: "^[A-Za-z_][A-Za-z0-9_]*$")
+    }()
 
     static func isValidEnvName(_ name: String) -> Bool {
         envNamePattern.firstMatch(in: name, range: NSRange(name.startIndex..., in: name)) != nil

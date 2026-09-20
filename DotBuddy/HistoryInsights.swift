@@ -27,59 +27,53 @@ final class HistoryInsights: ObservableObject {
         }
     }
 
-    private nonisolated static func parseHistory(existingAliases: [String: String]) -> [CommandSuggestion] {
-        let historyPaths = [
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".zsh_history").path,
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".bash_history").path
+    private nonisolated static func loadHistoryLines() -> [String] {
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        let paths = [
+            home.appendingPathComponent(".zsh_history").path,
+            home.appendingPathComponent(".bash_history").path
         ]
-
-        var allLines: [String] = []
-        for path in historyPaths {
+        for path in paths {
             if let content = try? String(contentsOfFile: path, encoding: .utf8) {
-                allLines = content.components(separatedBy: .newlines)
-            } else if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
-                      let content = String(data: data, encoding: .ascii) {
-                allLines = content.components(separatedBy: .newlines)
-            } else {
-                continue
+                return content.components(separatedBy: .newlines)
             }
-            break
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+               let content = String(data: data, encoding: .ascii) {
+                return content.components(separatedBy: .newlines)
+            }
         }
+        return []
+    }
 
+    private nonisolated static func normalizeHistoryLine(_ line: String) -> String? {
+        var cmd = line
+        if cmd.hasPrefix(":") {
+            guard let idx = cmd.firstIndex(of: ";") else { return nil }
+            cmd = String(cmd[cmd.index(after: idx)...])
+        }
+        cmd = cmd.trimmingCharacters(in: .whitespaces)
+        guard !cmd.isEmpty, cmd.count > 3, !cmd.contains("&&"), !cmd.contains("|") else { return nil }
+        let parts = cmd.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+        guard parts.count >= 2, parts.count <= 5 else { return nil }
+        return parts.joined(separator: " ")
+    }
+
+    private nonisolated static func parseHistory(existingAliases: [String: String]) -> [CommandSuggestion] {
+        let allLines = loadHistoryLines()
         guard !allLines.isEmpty else { return [] }
 
         let aliasedCommands = Set(existingAliases.values)
-
         var counts: [String: Int] = [:]
         for line in allLines {
-            var cmd = line
-            if cmd.hasPrefix(":") {
-                if let semicolonIndex = cmd.firstIndex(of: ";") {
-                    cmd = String(cmd[cmd.index(after: semicolonIndex)...])
-                } else {
-                    continue
-                }
-            }
-            cmd = cmd.trimmingCharacters(in: .whitespaces)
-            guard !cmd.isEmpty, cmd.count > 3, !cmd.contains("&&"), !cmd.contains("|") else { continue }
-
-            let parts = cmd.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-            guard parts.count >= 2, parts.count <= 5 else { continue }
-
-            let normalized = parts.joined(separator: " ")
-            if aliasedCommands.contains(normalized) { continue }
+            guard let normalized = normalizeHistoryLine(line),
+                  !aliasedCommands.contains(normalized) else { continue }
             counts[normalized, default: 0] += 1
         }
 
         let existingNames = Set(existingAliases.keys)
-        let filtered = counts
-            .filter { $0.value >= 5 }
-            .sorted { $0.value > $1.value }
-            .prefix(20)
-
         var usedNames: Set<String> = []
         var result: [CommandSuggestion] = []
-        for (cmd, count) in filtered {
+        for (cmd, count) in counts.filter({ $0.value >= 5 }).sorted(by: { $0.value > $1.value }).prefix(20) {
             guard result.count < 8 else { break }
             let shortName = generateAliasName(for: cmd)
             if existingNames.contains(shortName) || usedNames.contains(shortName) { continue }
