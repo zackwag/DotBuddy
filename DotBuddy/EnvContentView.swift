@@ -227,6 +227,9 @@ struct EnvContentView: View {
             if viewModel.fileChangedExternally {
                 fileChangedBanner
             }
+            if !viewModel.isSourced {
+                notSourcedBanner
+            }
             if showReplaceBar {
                 replaceBar
             }
@@ -523,6 +526,24 @@ struct EnvContentView: View {
         .padding(.horizontal)
         .padding(.vertical, 6)
         .background(.blue.opacity(0.1))
+    }
+
+    var notSourcedBanner: some View {
+        HStack {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+            Text("This file isn't sourced in your shell profile.")
+                .font(.callout)
+            Spacer()
+            Button("Fix") { viewModel.fixSourced() }
+                .controlSize(.small)
+                .buttonStyle(.borderedProminent)
+            Button("Dismiss") { viewModel.isSourced = true }
+                .controlSize(.small)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 6)
+        .background(.orange.opacity(0.1))
     }
 
 }

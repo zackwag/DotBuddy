@@ -13,6 +13,7 @@ let package = Package(
                 "AliasFileManager.swift",
                 "EnvVariable.swift",
                 "EnvFileManager.swift",
+                "ShellProfileDetector.swift",
             ]
         ),
         .testTarget(
