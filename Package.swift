@@ -11,6 +11,7 @@ let package = Package(
             sources: [
                 "Alias.swift",
                 "AliasFileManager.swift",
+                "CommandConflictChecker.swift",
                 "EnvVariable.swift",
                 "EnvFileManager.swift",
                 "ShellProfileDetector.swift",

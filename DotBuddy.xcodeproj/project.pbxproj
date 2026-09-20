@@ -131,6 +131,7 @@
 				A42102FD2C625F72005580E9 /* DotBuddyApp.swift */,
 				A421030D2C625F74005580E9 /* Alias.swift */,
 				A421030F2C625F74005580E9 /* AliasFileManager.swift */,
+				D60000022DA00001005580E9 /* CommandConflictChecker.swift */,
 				A42103112C625F74005580E9 /* AliasViewModel.swift */,
 				A42102FF2C625F72005580E9 /* ContentView.swift */,
 				C50000022D900001005580E9 /* ContentView+Toolbar.swift */,
@@ -281,6 +282,7 @@
 				A42102FE2C625F72005580E9 /* DotBuddyApp.swift in Sources */,
 				A421030C2C625F74005580E9 /* Alias.swift in Sources */,
 				A421030E2C625F74005580E9 /* AliasFileManager.swift in Sources */,
+				D60000012DA00001005580E9 /* CommandConflictChecker.swift in Sources */,
 				A42103102C625F74005580E9 /* AliasViewModel.swift in Sources */,
 				A42103122C625F74005580E9 /* AliasFormView.swift in Sources */,
 				A42103142C625F74005580E9 /* AliasRowView.swift in Sources */,
@@ -461,7 +463,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.2.1; /* x-release-please-version */
+				MARKETING_VERSION = 2.4.0; /* x-release-please-version */
 				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
 				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -488,7 +490,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.2.1; /* x-release-please-version */
+				MARKETING_VERSION = 2.4.0; /* x-release-please-version */
 				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
 				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
