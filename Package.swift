@@ -13,6 +13,10 @@ let package = Package(
                 "AliasFileManager.swift",
                 "EnvVariable.swift",
                 "EnvFileManager.swift",
+                "SSHHost.swift",
+                "SSHConfigFileManager.swift",
+                "KnownHost.swift",
+                "KnownHostsFileManager.swift",
             ]
         ),
         .testTarget(

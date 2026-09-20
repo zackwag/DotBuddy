@@ -34,6 +34,20 @@
 		C50000032D900002005580E9 /* ContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000042D900002005580E9 /* ContentView+Actions.swift */; };
 		C50000052D900003005580E9 /* EnvContentView+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */; };
 		C50000072D900004005580E9 /* EnvContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50000082D900004005580E9 /* EnvContentView+Actions.swift */; };
+		D50001002E0A0001005580E9 /* SSHHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001012E0A0001005580E9 /* SSHHost.swift */; };
+		D50001022E0A0002005580E9 /* SSHConfigFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001032E0A0002005580E9 /* SSHConfigFileManager.swift */; };
+		D50001042E0A0003005580E9 /* SSHViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001052E0A0003005580E9 /* SSHViewModel.swift */; };
+		D50001062E0A0004005580E9 /* SSHContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001072E0A0004005580E9 /* SSHContentView.swift */; };
+		D50001082E0A0005005580E9 /* SSHContentView+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001092E0A0005005580E9 /* SSHContentView+Toolbar.swift */; };
+		D500010A2E0A0006005580E9 /* SSHContentView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D500010B2E0A0006005580E9 /* SSHContentView+Actions.swift */; };
+		D500010C2E0A0007005580E9 /* SSHHostRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D500010D2E0A0007005580E9 /* SSHHostRowView.swift */; };
+		D500010E2E0A0008005580E9 /* SSHHostFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D500010F2E0A0008005580E9 /* SSHHostFormView.swift */; };
+		D50001102E0A0009005580E9 /* SSHKeyGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50001112E0A0009005580E9 /* SSHKeyGeneratorView.swift */; };
+		D60001002E0A000A005580E9 /* KnownHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001012E0A000A005580E9 /* KnownHost.swift */; };
+		D60001022E0A000B005580E9 /* KnownHostsFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001032E0A000B005580E9 /* KnownHostsFileManager.swift */; };
+		D60001042E0A000C005580E9 /* KnownHostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */; };
+		D60001062E0A000D005580E9 /* KnownHostsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001072E0A000D005580E9 /* KnownHostsContentView.swift */; };
+		D60001082E0A000E005580E9 /* KnownHostRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60001092E0A000E005580E9 /* KnownHostRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +80,20 @@
 		C50000042D900002005580E9 /* ContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+Actions.swift"; sourceTree = "<group>"; };
 		C50000062D900003005580E9 /* EnvContentView+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvContentView+Toolbar.swift"; sourceTree = "<group>"; };
 		C50000082D900004005580E9 /* EnvContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvContentView+Actions.swift"; sourceTree = "<group>"; };
+		D50001012E0A0001005580E9 /* SSHHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHHost.swift; sourceTree = "<group>"; };
+		D50001032E0A0002005580E9 /* SSHConfigFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHConfigFileManager.swift; sourceTree = "<group>"; };
+		D50001052E0A0003005580E9 /* SSHViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHViewModel.swift; sourceTree = "<group>"; };
+		D50001072E0A0004005580E9 /* SSHContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHContentView.swift; sourceTree = "<group>"; };
+		D50001092E0A0005005580E9 /* SSHContentView+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SSHContentView+Toolbar.swift"; sourceTree = "<group>"; };
+		D500010B2E0A0006005580E9 /* SSHContentView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SSHContentView+Actions.swift"; sourceTree = "<group>"; };
+		D500010D2E0A0007005580E9 /* SSHHostRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHHostRowView.swift; sourceTree = "<group>"; };
+		D500010F2E0A0008005580E9 /* SSHHostFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHHostFormView.swift; sourceTree = "<group>"; };
+		D50001112E0A0009005580E9 /* SSHKeyGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHKeyGeneratorView.swift; sourceTree = "<group>"; };
+		D60001012E0A000A005580E9 /* KnownHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHost.swift; sourceTree = "<group>"; };
+		D60001032E0A000B005580E9 /* KnownHostsFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsFileManager.swift; sourceTree = "<group>"; };
+		D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsViewModel.swift; sourceTree = "<group>"; };
+		D60001072E0A000D005580E9 /* KnownHostsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostsContentView.swift; sourceTree = "<group>"; };
+		D60001092E0A000E005580E9 /* KnownHostRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +150,20 @@
 				A421032D2C625F7B005580E9 /* BulkActionBar.swift */,
 				B40000032C625F7C005580E9 /* FileWatcher.swift */,
 				B40000052C625F7D005580E9 /* HistoryInsights.swift */,
+				D50001012E0A0001005580E9 /* SSHHost.swift */,
+				D50001032E0A0002005580E9 /* SSHConfigFileManager.swift */,
+				D50001052E0A0003005580E9 /* SSHViewModel.swift */,
+				D50001072E0A0004005580E9 /* SSHContentView.swift */,
+				D50001092E0A0005005580E9 /* SSHContentView+Toolbar.swift */,
+				D500010B2E0A0006005580E9 /* SSHContentView+Actions.swift */,
+				D500010D2E0A0007005580E9 /* SSHHostRowView.swift */,
+				D500010F2E0A0008005580E9 /* SSHHostFormView.swift */,
+				D50001112E0A0009005580E9 /* SSHKeyGeneratorView.swift */,
+				D60001012E0A000A005580E9 /* KnownHost.swift */,
+				D60001032E0A000B005580E9 /* KnownHostsFileManager.swift */,
+				D60001052E0A000C005580E9 /* KnownHostsViewModel.swift */,
+				D60001072E0A000D005580E9 /* KnownHostsContentView.swift */,
+				D60001092E0A000E005580E9 /* KnownHostRowView.swift */,
 				A42103012C625F73005580E9 /* Assets.xcassets */,
 				A42103062C625F73005580E9 /* DotBuddy.entitlements */,
 				A42103032C625F73005580E9 /* Preview Content */,
@@ -157,7 +199,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if command -v swiftlint >/dev/null 2>&1; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if [ -x /opt/homebrew/bin/swiftlint ]; then\n  /opt/homebrew/bin/swiftlint\nelif command -v swiftlint >/dev/null 2>&1; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -254,6 +296,20 @@
 				A421032C2C625F7B005580E9 /* BulkActionBar.swift in Sources */,
 				B40000022C625F7C005580E9 /* FileWatcher.swift in Sources */,
 				B40000042C625F7D005580E9 /* HistoryInsights.swift in Sources */,
+				D50001002E0A0001005580E9 /* SSHHost.swift in Sources */,
+				D50001022E0A0002005580E9 /* SSHConfigFileManager.swift in Sources */,
+				D50001042E0A0003005580E9 /* SSHViewModel.swift in Sources */,
+				D50001062E0A0004005580E9 /* SSHContentView.swift in Sources */,
+				D50001082E0A0005005580E9 /* SSHContentView+Toolbar.swift in Sources */,
+				D500010A2E0A0006005580E9 /* SSHContentView+Actions.swift in Sources */,
+				D500010C2E0A0007005580E9 /* SSHHostRowView.swift in Sources */,
+				D500010E2E0A0008005580E9 /* SSHHostFormView.swift in Sources */,
+				D50001102E0A0009005580E9 /* SSHKeyGeneratorView.swift in Sources */,
+				D60001002E0A000A005580E9 /* KnownHost.swift in Sources */,
+				D60001022E0A000B005580E9 /* KnownHostsFileManager.swift in Sources */,
+				D60001042E0A000C005580E9 /* KnownHostsViewModel.swift in Sources */,
+				D60001062E0A000D005580E9 /* KnownHostsContentView.swift in Sources */,
+				D60001082E0A000E005580E9 /* KnownHostRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
