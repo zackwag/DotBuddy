@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/zackwag/DotBuddy/compare/v2.2.1...v2.3.0) (2026-09-20)
+
+
+### Features
+
+* Add SSH config and known hosts management ([#12](https://github.com/zackwag/DotBuddy/issues/12)) ([5701eb4](https://github.com/zackwag/DotBuddy/commit/5701eb4eb5808ee05f0413d45e45a061e3186473))
+
 ## [2.2.1](https://github.com/zackwag/DotBuddy/compare/v2.2.0...v2.2.1) (2026-09-17)
 
 
