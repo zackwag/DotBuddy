@@ -28,9 +28,10 @@ final class HistoryInsights: ObservableObject {
     }
 
     private nonisolated static func parseHistory(existingAliases: [String: String]) -> [CommandSuggestion] {
+        let home = FileManager.default.homeDirectoryForCurrentUser
         let historyPaths = [
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".zsh_history").path,
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".bash_history").path
+            home.appendingPathComponent(".zsh_history").path,
+            home.appendingPathComponent(".bash_history").path
         ]
 
         let allLines = readHistoryLines(paths: historyPaths)
@@ -54,7 +55,6 @@ final class HistoryInsights: ObservableObject {
 
     private nonisolated static func countCommands(in lines: [String], existingAliases: [String: String]) -> [String: Int] {
         let aliasedCommands = Set(existingAliases.values)
-
         var counts: [String: Int] = [:]
         for line in lines {
             guard let normalized = normalizedCommand(from: line), !aliasedCommands.contains(normalized) else { continue }
@@ -83,14 +83,9 @@ final class HistoryInsights: ObservableObject {
         existingAliases: [String: String]
     ) -> [CommandSuggestion] {
         let existingNames = Set(existingAliases.keys)
-        let filtered = counts
-            .filter { $0.value >= 5 }
-            .sorted { $0.value > $1.value }
-            .prefix(20)
-
         var usedNames: Set<String> = []
         var result: [CommandSuggestion] = []
-        for (cmd, count) in filtered {
+        for (cmd, count) in counts.filter({ $0.value >= 5 }).sorted(by: { $0.value > $1.value }).prefix(20) {
             guard result.count < 8 else { break }
             let shortName = generateAliasName(for: cmd)
             if existingNames.contains(shortName) || usedNames.contains(shortName) { continue }

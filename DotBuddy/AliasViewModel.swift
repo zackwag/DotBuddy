@@ -192,7 +192,6 @@ final class AliasViewModel: ObservableObject {
                 self.suppressNextWatch = false
                 return
             }
-            guard !self.hasUnsavedChanges else { return }
             self.fileChangedExternally = true
             self.sendFileChangedNotification(fileName: self.fileName)
         }

@@ -74,7 +74,7 @@ extension EnvContentView {
                 }) {
                     let allSelected = !viewModel.displayedVariables.isEmpty && selectedVariables == Set(viewModel.displayedVariables.map(\.id))
                     Label(allSelected ? "Deselect All" : "Select All",
-                          systemImage: allSelected ? "minus.circle" : "checkmark.circle.badge.checkmark")
+                          systemImage: allSelected ? "minus.circle" : "checklist.checked")
                 }
                 .help("Select or deselect all visible variables")
             }
