@@ -26,27 +26,18 @@ extension SSHContentView {
     }
 
     func submitForm() {
-        let success: Bool
-        if let editing = editingHost {
-            success = viewModel.updateHost(
-                id: editing.id,
-                hostPattern: hostPattern,
-                hostname: hostHostname,
-                user: hostUser,
-                port: hostPort,
-                identityFile: hostIdentityFile,
-                group: hostGroup
-            )
-        } else {
-            success = viewModel.addHost(
-                hostPattern: hostPattern,
-                hostname: hostHostname,
-                user: hostUser,
-                port: hostPort,
-                identityFile: hostIdentityFile,
-                group: hostGroup
-            )
-        }
+        let host = SSHHost(
+            id: editingHost?.id ?? UUID(),
+            hostPattern: hostPattern,
+            hostname: hostHostname,
+            user: hostUser,
+            port: hostPort,
+            identityFile: hostIdentityFile,
+            group: hostGroup
+        )
+        let success = editingHost != nil
+            ? viewModel.updateHost(host)
+            : viewModel.addHost(host)
 
         if success {
             cancelForm()

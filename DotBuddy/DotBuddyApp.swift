@@ -79,39 +79,7 @@ struct DotBuddyApp: App {
                 .textFieldStyle(.roundedBorder)
                 .padding(8)
 
-            let query = menuBarSearch.lowercased()
-            let aliases = aliasViewModel.workingAliases.filter { alias in
-                query.isEmpty || alias.name.lowercased().contains(query) || alias.command.lowercased().contains(query)
-            }
-            let variables = envViewModel.workingVariables.filter { v in
-                query.isEmpty || v.name.lowercased().contains(query) || v.value.lowercased().contains(query)
-            }
-            let sshHosts = sshViewModel.workingHosts.filter { host in
-                query.isEmpty || host.hostPattern.lowercased().contains(query) || host.hostname.lowercased().contains(query)
-            }
-
-            if aliases.isEmpty && variables.isEmpty && sshHosts.isEmpty {
-                Text("No matches")
-                    .foregroundStyle(.secondary)
-                    .padding()
-            } else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        if !aliases.isEmpty {
-                            menuBarAliasSection(aliases: Array(aliases.prefix(10)))
-                        }
-
-                        if !variables.isEmpty {
-                            menuBarEnvSection(variables: Array(variables.prefix(10)))
-                        }
-
-                        if !sshHosts.isEmpty {
-                            menuBarSSHSection(hosts: Array(sshHosts.prefix(10)))
-                        }
-                    }
-                }
-                .frame(maxHeight: 300)
-            }
+            menuBarSearchResults
 
             Divider()
 
@@ -125,6 +93,42 @@ struct DotBuddyApp: App {
                 }
             }
             .padding(8)
+        }
+    }
+
+    private var menuBarSearchResults: some View {
+        let query = menuBarSearch.lowercased()
+        let aliases = aliasViewModel.workingAliases.filter { alias in
+            query.isEmpty || alias.name.lowercased().contains(query) || alias.command.lowercased().contains(query)
+        }
+        let variables = envViewModel.workingVariables.filter { v in
+            query.isEmpty || v.name.lowercased().contains(query) || v.value.lowercased().contains(query)
+        }
+        let sshHosts = sshViewModel.workingHosts.filter { host in
+            query.isEmpty || host.hostPattern.lowercased().contains(query) || host.hostname.lowercased().contains(query)
+        }
+
+        return Group {
+            if aliases.isEmpty && variables.isEmpty && sshHosts.isEmpty {
+                Text("No matches")
+                    .foregroundStyle(.secondary)
+                    .padding()
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        if !aliases.isEmpty {
+                            menuBarAliasSection(aliases: Array(aliases.prefix(10)))
+                        }
+                        if !variables.isEmpty {
+                            menuBarEnvSection(variables: Array(variables.prefix(10)))
+                        }
+                        if !sshHosts.isEmpty {
+                            menuBarSSHSection(hosts: Array(sshHosts.prefix(10)))
+                        }
+                    }
+                }
+                .frame(maxHeight: 300)
+            }
         }
     }
 
@@ -270,7 +274,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         center.requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
         [.banner, .sound]
     }
 

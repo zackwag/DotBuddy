@@ -26,9 +26,9 @@ struct SSHKeyGeneratorView: View {
     }
 
     enum KeyType: String, CaseIterable {
-        case ed25519 = "ed25519"
-        case rsa = "rsa"
-        case ecdsa = "ecdsa"
+        case ed25519
+        case rsa
+        case ecdsa
 
         var displayName: String {
             switch self {
@@ -287,20 +287,27 @@ struct SSHKeyGeneratorView: View {
         .padding()
     }
 
+    struct KeyGenConfig: Sendable {
+        let type: KeyType
+        let outputPath: String
+        let passphrase: String
+        let comment: String
+        let bits: String
+    }
+
     private func generateKey() {
         isGenerating = true
         resultMessage = nil
         generatedKeyPath = nil
 
-        Task.detached { [keyType, outputPath, passphrase, comment, bits, sshDir] in
-            let result = Self.runKeyGen(
-                type: keyType,
-                outputPath: outputPath,
-                passphrase: passphrase,
-                comment: comment,
-                bits: bits,
-                sshDir: sshDir
-            )
+        let config = KeyGenConfig(
+            type: keyType, outputPath: outputPath,
+            passphrase: passphrase, comment: comment, bits: bits
+        )
+        let dir = sshDir
+
+        Task.detached {
+            let result = Self.runKeyGen(config: config, sshDir: dir)
 
             await MainActor.run { [self] in
                 isGenerating = false
@@ -312,14 +319,13 @@ struct SSHKeyGeneratorView: View {
                     resultIsError = false
 
                     if createHostEntry && !hostPattern.isEmpty {
-                        sshViewModel.addHost(
+                        sshViewModel.addHost(SSHHost(
                             hostPattern: hostPattern,
                             hostname: hostHostname,
                             user: hostUser,
-                            port: "",
                             identityFile: "~/.ssh/\(keyName)",
                             group: hostGroup
-                        )
+                        ))
                     }
 
                 case .failure(let error):
@@ -330,14 +336,7 @@ struct SSHKeyGeneratorView: View {
         }
     }
 
-    private nonisolated static func runKeyGen(
-        type: KeyType,
-        outputPath: String,
-        passphrase: String,
-        comment: String,
-        bits: String,
-        sshDir: String
-    ) -> KeyGenResult {
+    private nonisolated static func runKeyGen(config: KeyGenConfig, sshDir: String) -> KeyGenResult {
         if !FileManager.default.fileExists(atPath: sshDir) {
             do {
                 try FileManager.default.createDirectory(atPath: sshDir, withIntermediateDirectories: true)
@@ -350,12 +349,12 @@ struct SSHKeyGeneratorView: View {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/ssh-keygen")
 
-        var args = ["-t", type.rawValue, "-f", outputPath, "-N", passphrase]
-        if !comment.isEmpty {
-            args += ["-C", comment]
+        var args = ["-t", config.type.rawValue, "-f", config.outputPath, "-N", config.passphrase]
+        if !config.comment.isEmpty {
+            args += ["-C", config.comment]
         }
-        if type.supportsBits {
-            args += ["-b", bits]
+        if config.type.supportsBits {
+            args += ["-b", config.bits]
         }
 
         process.arguments = args
@@ -377,9 +376,9 @@ struct SSHKeyGeneratorView: View {
         }
 
         do {
-            try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: outputPath)
+            try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: config.outputPath)
         } catch {}
 
-        return .success(outputPath)
+        return .success(config.outputPath)
     }
 }

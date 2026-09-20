@@ -111,82 +111,65 @@ struct SSHConfigFileManager {
         return hosts
     }
 
-    private static func parseHostBlock(lines: [String], startIndex: Int, group: String, isEnabled: Bool) -> (SSHHost?, Int) {
-        let firstLine = lines[startIndex].trimmingCharacters(in: .whitespaces)
-        let uncommented = isEnabled ? firstLine : String(firstLine.dropFirst(2)).trimmingCharacters(in: .whitespaces)
+    private enum DirectiveLine {
+        case directive(String)
+        case blockEnd
+    }
 
-        guard uncommented.lowercased().hasPrefix("host ") else {
-            return (nil, startIndex + 1)
+    private static func classifyDirectiveLine(_ line: String, isEnabled: Bool) -> DirectiveLine {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        if trimmed.isEmpty { return .blockEnd }
+
+        if trimmed.hasPrefix("##") {
+            let inner = String(trimmed.dropFirst(2)).trimmingCharacters(in: .whitespaces)
+            let lower = inner.lowercased()
+            if lower.hasPrefix("host ") && !lower.hasPrefix("hostname") { return .blockEnd }
+            return isEnabled ? .blockEnd : .directive(inner)
         }
 
-        let pattern = String(uncommented.dropFirst(5)).trimmingCharacters(in: .whitespaces)
+        if !isEnabled { return .blockEnd }
+
+        let lower = trimmed.lowercased()
+        if lower.hasPrefix("host ") && !lower.hasPrefix("hostname") { return .blockEnd }
+        if trimmed.hasPrefix("#") { return .blockEnd }
+
+        return .directive(trimmed)
+    }
+
+    private static func parseDirective(_ content: String) -> (key: String, value: String)? {
+        let parts = content.split(separator: " ", maxSplits: 1)
+        guard parts.count == 2 else { return nil }
+        return (String(parts[0]), String(parts[1]).trimmingCharacters(in: .whitespaces))
+    }
+
+    private static func parseHostBlock(
+        lines: [String], startIndex: Int, group: String, isEnabled: Bool
+    ) -> (SSHHost?, Int) {
+        let firstLine = lines[startIndex].trimmingCharacters(in: .whitespaces)
+        let raw = isEnabled ? firstLine : String(firstLine.dropFirst(2)).trimmingCharacters(in: .whitespaces)
+
+        guard raw.lowercased().hasPrefix("host ") else { return (nil, startIndex + 1) }
+        let pattern = String(raw.dropFirst(5)).trimmingCharacters(in: .whitespaces)
         guard !pattern.isEmpty else { return (nil, startIndex + 1) }
 
-        var hostname = ""
-        var user = ""
-        var port = ""
-        var identityFile = ""
-        var otherDirectives: [(key: String, value: String)] = []
-
+        var directives: [(key: String, value: String)] = []
         var i = startIndex + 1
-        while i < lines.count {
-            let line = lines[i]
-            var trimmed = line.trimmingCharacters(in: .whitespaces)
-
-            if trimmed.isEmpty { break }
-
-            if trimmed.hasPrefix("##") {
-                let uncommented = String(trimmed.dropFirst(2)).trimmingCharacters(in: .whitespaces)
-                let lowerU = uncommented.lowercased()
-                if lowerU.hasPrefix("host ") && !lowerU.hasPrefix("hostname") {
-                    break
-                }
-                if !isEnabled {
-                    trimmed = uncommented
-                } else {
-                    break
-                }
-            } else if !isEnabled {
-                break
-            }
-
-            if trimmed.lowercased().hasPrefix("host ") && !trimmed.lowercased().hasPrefix("hostname") {
-                break
-            }
-
-            if trimmed.hasPrefix("#") {
-                break
-            }
-
-            let parts = trimmed.split(separator: " ", maxSplits: 1)
-            guard parts.count == 2 else {
+        loop: while i < lines.count {
+            switch classifyDirectiveLine(lines[i], isEnabled: isEnabled) {
+            case .blockEnd: break loop
+            case .directive(let content):
+                if let pair = parseDirective(content) { directives.append(pair) }
                 i += 1
-                continue
             }
-
-            let key = String(parts[0])
-            let value = String(parts[1]).trimmingCharacters(in: .whitespaces)
-
-            switch key.lowercased() {
-            case "hostname": hostname = value
-            case "user": user = value
-            case "port": port = value
-            case "identityfile": identityFile = value
-            default: otherDirectives.append((key: key, value: value))
-            }
-
-            i += 1
         }
 
+        let mapped = Dictionary(directives.map { ($0.key.lowercased(), $0.value) }, uniquingKeysWith: { _, last in last })
+        let others = directives.filter { !["hostname", "user", "port", "identityfile"].contains($0.key.lowercased()) }
         let host = SSHHost(
-            hostPattern: pattern,
-            hostname: hostname,
-            user: user,
-            port: port,
-            identityFile: identityFile,
-            otherDirectives: otherDirectives,
-            group: group,
-            isEnabled: isEnabled
+            hostPattern: pattern, hostname: mapped["hostname", default: ""],
+            user: mapped["user", default: ""], port: mapped["port", default: ""],
+            identityFile: mapped["identityfile", default: ""], otherDirectives: others,
+            group: group, isEnabled: isEnabled
         )
         return (host, i)
     }

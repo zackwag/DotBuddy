@@ -154,54 +154,45 @@ final class SSHViewModel: ObservableObject {
     }
 
     @discardableResult
-    func addHost(hostPattern: String, hostname: String, user: String, port: String, identityFile: String, group: String) -> Bool {
-        guard !hostPattern.isEmpty else { return false }
+    func addHost(_ host: SSHHost) -> Bool {
+        guard !host.hostPattern.isEmpty else { return false }
 
-        if workingHosts.contains(where: { $0.hostPattern == hostPattern }) {
-            showError(message: "A host entry for '\(hostPattern)' already exists.")
+        if workingHosts.contains(where: { $0.hostPattern == host.hostPattern }) {
+            showError(message: "A host entry for '\(host.hostPattern)' already exists.")
             return false
         }
 
-        let newHost = SSHHost(
-            hostPattern: hostPattern,
-            hostname: hostname,
-            user: user,
-            port: port,
-            identityFile: identityFile,
-            group: group
-        )
-
-        if group.isEmpty {
-            workingHosts.append(newHost)
-        } else if let lastIndex = workingHosts.lastIndex(where: { $0.group == group }) {
-            workingHosts.insert(newHost, at: workingHosts.index(after: lastIndex))
+        if host.group.isEmpty {
+            workingHosts.append(host)
+        } else if let lastIndex = workingHosts.lastIndex(where: { $0.group == host.group }) {
+            workingHosts.insert(host, at: workingHosts.index(after: lastIndex))
         } else {
-            workingHosts.append(newHost)
+            workingHosts.append(host)
         }
 
         if sortOrder != .none { applySort() }
         return true
     }
 
-    func updateHost(id: UUID, hostPattern: String, hostname: String, user: String, port: String, identityFile: String, group: String) -> Bool {
-        guard !hostPattern.isEmpty else { return false }
+    func updateHost(_ host: SSHHost) -> Bool {
+        guard !host.hostPattern.isEmpty else { return false }
 
-        if workingHosts.contains(where: { $0.hostPattern == hostPattern && $0.id != id }) {
-            showError(message: "A host entry for '\(hostPattern)' already exists.")
+        if workingHosts.contains(where: { $0.hostPattern == host.hostPattern && $0.id != host.id }) {
+            showError(message: "A host entry for '\(host.hostPattern)' already exists.")
             return false
         }
 
-        guard let index = workingHosts.firstIndex(where: { $0.id == id }) else { return false }
+        guard let index = workingHosts.firstIndex(where: { $0.id == host.id }) else { return false }
         let existing = workingHosts[index]
         workingHosts[index] = SSHHost(
-            id: id,
-            hostPattern: hostPattern,
-            hostname: hostname,
-            user: user,
-            port: port,
-            identityFile: identityFile,
+            id: host.id,
+            hostPattern: host.hostPattern,
+            hostname: host.hostname,
+            user: host.user,
+            port: host.port,
+            identityFile: host.identityFile,
             otherDirectives: existing.otherDirectives,
-            group: group,
+            group: host.group,
             isEnabled: existing.isEnabled
         )
         return true
