@@ -14,6 +14,10 @@ let package = Package(
                 "EnvVariable.swift",
                 "EnvFileManager.swift",
                 "ShellProfileDetector.swift",
+                "SSHHost.swift",
+                "SSHConfigFileManager.swift",
+                "KnownHost.swift",
+                "KnownHostsFileManager.swift",
             ]
         ),
         .testTarget(
