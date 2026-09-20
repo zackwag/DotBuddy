@@ -143,9 +143,7 @@ jobs:
 
             app "DotBuddy.app"
 
-            zap trash: [
-              "~/Library/Preferences/dev.zackwag.DotBuddy.plist",
-            ]
+            zap trash: "~/Library/Preferences/dev.zackwag.DotBuddy.plist"
           end
           EOF
           sed -i '' 's/^          //' Casks/dotbuddy.rb
