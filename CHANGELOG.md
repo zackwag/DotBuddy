@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/zackwag/DotBuddy/compare/v2.5.0...v2.5.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* add missing CommandConflictChecker pbxproj entries ([#20](https://github.com/zackwag/DotBuddy/issues/20)) ([87f1498](https://github.com/zackwag/DotBuddy/commit/87f1498d15ae5b9c0777583c84f0d686d71230f4))
+
 ## [2.5.0](https://github.com/zackwag/DotBuddy/compare/v2.4.0...v2.5.0) (2026-09-20)
 
 
