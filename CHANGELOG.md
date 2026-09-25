@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0](https://github.com/zackwag/DotBuddy/compare/v2.6.1...v2.7.0) (2026-09-25)
+
+
+### Features
+
+* Add known host reachability testing ([#30](https://github.com/zackwag/DotBuddy/issues/30)) ([c781e5a](https://github.com/zackwag/DotBuddy/commit/c781e5a0f4670b457160b77b9ac7c563a58baebb))
+* Add Settings window with menu bar toggle ([#28](https://github.com/zackwag/DotBuddy/issues/28)) ([d22b4eb](https://github.com/zackwag/DotBuddy/commit/d22b4ebc4c319ec8e18608e8efd5bf7cad12b478))
+
 ## [2.6.1](https://github.com/zackwag/DotBuddy/compare/v2.6.0...v2.6.1) (2026-09-25)
 
 
