@@ -111,6 +111,22 @@ extension SSHContentView {
         return .handled
     }
 
+    func openImportPicker() {
+        let panel = NSOpenPanel()
+        panel.title = "Import SSH Config"
+        panel.allowedContentTypes = [.plainText, .item]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.showsHiddenFiles = true
+        panel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".ssh")
+
+        if panel.runModal() == .OK, let url = panel.url {
+            let count = viewModel.importHosts(from: url)
+            if count > 0 { importedCount = count }
+        }
+    }
+
     func openFilePicker() {
         let panel = NSOpenPanel()
         panel.title = "Select SSH Config File"

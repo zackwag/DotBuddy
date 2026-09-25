@@ -280,6 +280,8 @@ struct LibraryView: View {
             return aliasViewModel.workingAliases.contains { $0.name == item.name }
         case .environment:
             return envViewModel.workingVariables.contains { $0.name == item.name }
+        case .ssh:
+            return false
         }
     }
 
@@ -300,6 +302,8 @@ struct LibraryView: View {
                 group: targetGroup
             )
             if success { addedItems.insert(item.name) }
+        case .ssh:
+            break
         }
     }
 

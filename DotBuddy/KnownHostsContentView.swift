@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct KnownHostsContentView: View {
     @ObservedObject var viewModel: KnownHostsViewModel
@@ -9,6 +10,8 @@ struct KnownHostsContentView: View {
     @State var showSaveConfirmation = false
     @State var showDiscardConfirmation = false
     @State var showFilePicker = false
+    @State var showImportPicker = false
+    @State var importedCount: Int?
     @State var selectionMode = false
     @State var selectedHosts: Set<UUID> = []
     @State var showBulkDeleteConfirmation = false
@@ -109,6 +112,20 @@ struct KnownHostsContentView: View {
                 }
             )
         }
+        .alert("Import Complete", isPresented: Binding(
+            get: { importedCount != nil },
+            set: { if !$0 { importedCount = nil } }
+        )) {
+            Button("OK") { importedCount = nil }
+        } message: {
+            Text("\(importedCount ?? 0) new host\(importedCount == 1 ? "" : "s") imported.")
+        }
+        .onChange(of: showImportPicker) { _, show in
+            if show {
+                showImportPicker = false
+                DispatchQueue.main.async { openImportPicker() }
+            }
+        }
     }
 
     var noFileState: some View {
@@ -189,6 +206,9 @@ struct KnownHostsContentView: View {
                                 onDelete: {
                                     hostToDelete = host
                                     showDeleteConfirmation = true
+                                },
+                                onDuplicate: {
+                                    viewModel.duplicateHost(host)
                                 }
                             )
                         }
@@ -352,8 +372,27 @@ struct KnownHostsContentView: View {
             Button(action: { viewModel.testAllHosts() }) {
                 Label("Test All", systemImage: "antenna.radiowaves.left.and.right")
             }
-            .help("Test reachability of all known hosts")
+            .keyboardShortcut("t", modifiers: [.command, .shift])
+            .help("Test reachability of all known hosts (Cmd+Shift+T)")
             .disabled(!viewModel.hasFile || viewModel.isTesting || viewModel.workingHosts.isEmpty)
+        }
+
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: exportHosts) {
+                Label("Export", systemImage: "square.and.arrow.up")
+            }
+            .keyboardShortcut("e", modifiers: .command)
+            .help("Export known hosts to a file (Cmd+E)")
+            .disabled(!viewModel.hasFile || viewModel.workingHosts.isEmpty)
+        }
+
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: { showImportPicker = true }) {
+                Label("Import", systemImage: "square.and.arrow.down")
+            }
+            .keyboardShortcut("i", modifiers: .command)
+            .help("Import known hosts from a file (Cmd+I)")
+            .disabled(!viewModel.hasFile)
         }
 
         ToolbarItem(placement: .primaryAction) {
@@ -399,6 +438,33 @@ struct KnownHostsContentView: View {
         guard selectionMode, !selectedHosts.isEmpty else { return .ignored }
         showBulkDeleteConfirmation = true
         return .handled
+    }
+
+    func exportHosts() {
+        let content = viewModel.exportContent()
+        let panel = NSSavePanel()
+        panel.title = "Export Known Hosts"
+        panel.nameFieldStringValue = "known_hosts"
+        panel.allowedContentTypes = [.plainText]
+        if panel.runModal() == .OK, let url = panel.url {
+            try? content.write(to: url, atomically: true, encoding: .utf8)
+        }
+    }
+
+    func openImportPicker() {
+        let panel = NSOpenPanel()
+        panel.title = "Import Known Hosts"
+        panel.allowedContentTypes = [.plainText, .item]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.showsHiddenFiles = true
+        panel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".ssh")
+
+        if panel.runModal() == .OK, let url = panel.url {
+            let count = viewModel.importHosts(from: url)
+            if count > 0 { importedCount = count }
+        }
     }
 
     func openFilePicker() {

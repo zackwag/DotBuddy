@@ -4,6 +4,7 @@ import SwiftUI
 struct KnownHostRowView: View {
     let host: KnownHost
     let onDelete: () -> Void
+    var onDuplicate: (() -> Void)?
 
     @State private var isRowHovered = false
 
@@ -44,6 +45,10 @@ struct KnownHostRowView: View {
                     NSPasteboard.general.clearContents()
                     NSPasteboard.general.setString(host.publicKey, forType: .string)
                 }, help: "Copy public key")
+
+                if let onDuplicate {
+                    HoverButton(icon: "plus.square.on.square", hoverColor: .accentColor, action: onDuplicate, help: "Duplicate host")
+                }
 
                 HoverButton(icon: "trash", hoverColor: .red, action: onDelete, help: "Remove host")
             }

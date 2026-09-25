@@ -30,7 +30,7 @@ struct LibrarySheetView: View {
 
     private var header: some View {
         HStack {
-            Text(type == .alias ? "Alias Library" : "Environment Library")
+            Text(type == .alias ? "Alias Library" : type == .environment ? "Environment Library" : "SSH Host Library")
                 .font(.headline)
             Spacer()
             Button(action: {
@@ -48,9 +48,12 @@ struct LibrarySheetView: View {
     }
 
     private var filteredCategories: [LibraryCategory] {
-        let categories = type == .alias
-            ? libraryStore.aliasCategories
-            : libraryStore.envCategories
+        let categories: [LibraryCategory]
+        switch type {
+        case .alias: categories = libraryStore.aliasCategories
+        case .environment: categories = libraryStore.envCategories
+        case .ssh: categories = libraryStore.sshCategories
+        }
 
         if searchText.isEmpty {
             return categories
@@ -208,9 +211,12 @@ struct LibrarySheetView: View {
     }
 
     private func bulkAddSelected(groupOverride: String?) {
-        let categories = type == .alias
-            ? libraryStore.aliasCategories
-            : libraryStore.envCategories
+        let categories: [LibraryCategory]
+        switch type {
+        case .alias: categories = libraryStore.aliasCategories
+        case .environment: categories = libraryStore.envCategories
+        case .ssh: categories = libraryStore.sshCategories
+        }
         let allItems = categories.flatMap(\.items)
 
         for item in allItems where selectedItems.contains(item.id) {

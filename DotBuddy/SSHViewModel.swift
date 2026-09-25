@@ -371,6 +371,19 @@ final class SSHViewModel: ObservableObject {
         return SSHConfigFileManager.serialize(hosts: items)
     }
 
+    func importHosts(from url: URL) -> Int {
+        guard let contents = try? String(contentsOf: url, encoding: .utf8) else { return 0 }
+        let parsed = SSHConfigFileManager.parseHosts(from: contents)
+        let existingPatterns = Set(workingHosts.map(\.hostPattern))
+        var count = 0
+        for host in parsed where !existingPatterns.contains(host.hostPattern) {
+            workingHosts.append(host)
+            count += 1
+        }
+        if sortOrder != .none { applySort() }
+        return count
+    }
+
     // MARK: - Connection Testing
 
     func testConnection(for host: SSHHost) {

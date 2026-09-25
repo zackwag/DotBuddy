@@ -13,6 +13,7 @@ struct DotBuddyApp: App {
     @State private var activeSection: AppSection?
     @State private var menuBarSearch = ""
     @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+    @AppStorage("preferredTerminal") private var preferredTerminal = TerminalApp.terminal.rawValue
 
     var body: some Scene {
         Window("DotBuddy", id: "main") {
@@ -24,7 +25,7 @@ struct DotBuddyApp: App {
                     case .environment:
                         EnvContentView(viewModel: envViewModel, libraryStore: libraryStore, onBack: { activeSection = nil })
                     case .sshConfig:
-                        SSHContentView(viewModel: sshViewModel, onBack: { activeSection = nil })
+                        SSHContentView(viewModel: sshViewModel, libraryStore: libraryStore) { activeSection = nil }
                     case .knownHosts:
                         KnownHostsContentView(viewModel: knownHostsViewModel, onBack: { activeSection = nil })
                     case .library:
@@ -242,8 +243,8 @@ struct DotBuddyApp: App {
                     .help(host.isEnabled ? "Disable" : "Enable")
 
                     Button {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString("ssh \(host.hostPattern)", forType: .string)
+                        let terminal = TerminalApp(rawValue: preferredTerminal) ?? .terminal
+                        terminal.launchSSH(host: host.hostPattern)
                     } label: {
                         HStack {
                             Text(host.hostPattern)
@@ -256,7 +257,7 @@ struct DotBuddyApp: App {
                         }
                     }
                     .buttonStyle(.plain)
-                    .help("Click to copy SSH command")
+                    .help("Connect via SSH in \(preferredTerminal)")
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)

@@ -47,12 +47,26 @@ extension SSHContentView {
         }
 
         ToolbarItem(placement: .primaryAction) {
-            Button(action: exportHosts) {
-                Label("Export", systemImage: "square.and.arrow.up")
+            Menu {
+                Button(action: exportHosts) {
+                    Label("Export", systemImage: "square.and.arrow.up")
+                }
+                .disabled(viewModel.workingHosts.isEmpty)
+
+                Button(action: { showImportPicker = true }) {
+                    Label("Import", systemImage: "square.and.arrow.down")
+                }
+
+                Divider()
+
+                Button(action: { showLibrary = true }) {
+                    Label("Library", systemImage: "book")
+                }
+            } label: {
+                Label("More", systemImage: "ellipsis.circle")
             }
-            .keyboardShortcut("e", modifiers: .command)
-            .help("Export SSH config to a file (Cmd+E)")
-            .disabled(!viewModel.hasFile || viewModel.workingHosts.isEmpty)
+            .help("Export, import, or browse library")
+            .disabled(!viewModel.hasFile)
         }
 
         ToolbarItem(placement: .primaryAction) {

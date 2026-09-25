@@ -109,6 +109,20 @@ final class KnownHostsViewModel: ObservableObject {
         loadHosts()
     }
 
+    func duplicateHost(_ host: KnownHost) {
+        let copy = KnownHost(
+            hostnames: host.hostnames,
+            keyType: host.keyType,
+            publicKey: host.publicKey,
+            isHashed: host.isHashed
+        )
+        if let index = workingHosts.firstIndex(where: { $0.id == host.id }) {
+            workingHosts.insert(copy, at: workingHosts.index(after: index))
+        } else {
+            workingHosts.append(copy)
+        }
+    }
+
     func deleteHost(_ host: KnownHost) {
         workingHosts.removeAll { $0.id == host.id }
     }
@@ -211,6 +225,25 @@ final class KnownHostsViewModel: ObservableObject {
             suppressNextWatch = false
             showError(message: "Failed to restore backup: \(error.localizedDescription)")
         }
+    }
+
+    func exportContent() -> String {
+        KnownHostsFileManager.serialize(hosts: workingHosts)
+    }
+
+    func importHosts(from url: URL) -> Int {
+        guard let contents = try? String(contentsOf: url, encoding: .utf8) else { return 0 }
+        let parsed = KnownHostsFileManager.parseHosts(from: contents)
+        let existingKeys = Set(workingHosts.map { "\($0.hostnames) \($0.keyType)" })
+        var count = 0
+        for host in parsed {
+            let key = "\(host.hostnames) \(host.keyType)"
+            if !existingKeys.contains(key) {
+                workingHosts.append(host)
+                count += 1
+            }
+        }
+        return count
     }
 
     func discardChanges() {
