@@ -12,6 +12,7 @@ struct DotBuddyApp: App {
     @StateObject private var libraryStore = LibraryStore()
     @State private var activeSection: AppSection?
     @State private var menuBarSearch = ""
+    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
 
     var body: some Scene {
         Window("DotBuddy", id: "main") {
@@ -66,7 +67,11 @@ struct DotBuddyApp: App {
             CommandGroup(replacing: .newItem) {}
         }
 
-        MenuBarExtra("DotBuddy", systemImage: "terminal.fill") {
+        Settings {
+            SettingsView()
+        }
+
+        MenuBarExtra("DotBuddy", systemImage: "terminal.fill", isInserted: $showMenuBarExtra) {
             menuBarContent
                 .frame(width: 320)
         }
