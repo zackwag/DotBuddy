@@ -81,6 +81,52 @@ final class ContainsSourceLineTests: XCTestCase {
         let contents = "  source /Users/me/.aliases.zsh\n"
         XCTAssertTrue(ShellProfileDetector.containsSourceLine(for: "/Users/me/.aliases.zsh", in: contents))
     }
+
+    func testDetectsSourceWrapperFunction() {
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let contents = """
+        source_if_found() {
+            if [[ -f "$1" ]]; then
+                source "$1"
+            fi
+        }
+        source_if_found "$HOME/.aliases.zsh"
+        """
+        XCTAssertTrue(ShellProfileDetector.containsSourceLine(for: "\(home)/.aliases.zsh", in: contents))
+    }
+
+    func testDetectsSourceWrapperWithTildePath() {
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let contents = """
+        safe_source() {
+            [[ -f "$1" ]] && source "$1"
+        }
+        safe_source "~/.aliases.zsh"
+        """
+        XCTAssertTrue(ShellProfileDetector.containsSourceLine(for: "\(home)/.aliases.zsh", in: contents))
+    }
+
+    func testIgnoresNonSourcingFunction() {
+        let contents = """
+        check_file() {
+            echo "$1"
+        }
+        check_file "/Users/me/.aliases.zsh"
+        """
+        XCTAssertFalse(ShellProfileDetector.containsSourceLine(for: "/Users/me/.aliases.zsh", in: contents))
+    }
+
+    func testDetectsDollarHomeExpansion() {
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let contents = "source \"$HOME/.aliases.zsh\"\n"
+        XCTAssertTrue(ShellProfileDetector.containsSourceLine(for: "\(home)/.aliases.zsh", in: contents))
+    }
+
+    func testDetectsBracedHomeExpansion() {
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let contents = "source \"${HOME}/.aliases.zsh\"\n"
+        XCTAssertTrue(ShellProfileDetector.containsSourceLine(for: "\(home)/.aliases.zsh", in: contents))
+    }
 }
 
 // MARK: - File I/O
