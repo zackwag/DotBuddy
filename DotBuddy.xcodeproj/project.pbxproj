@@ -485,7 +485,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.7.0; /* x-release-please-version */
+				MARKETING_VERSION = 2.8.0; /* x-release-please-version */
 				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
 				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -512,7 +512,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.7.0; /* x-release-please-version */
+				MARKETING_VERSION = 2.8.0; /* x-release-please-version */
 				PRODUCT_BUNDLE_IDENTIFIER = zackwag.DotBuddy;
 				PRODUCT_NAME = DotBuddy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
