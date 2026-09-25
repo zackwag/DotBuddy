@@ -224,6 +224,7 @@ final class LibraryStore: ObservableObject {
         ]),
     ]
 
+    // swiftlint:disable line_length
     static let bundledSSHCategories: [LibraryCategory] = [
         LibraryCategory(name: "Git Hosting", icon: "arrow.triangle.branch", items: [
             LibraryItem(name: "github.com", value: "github.com", description: "GitHub SSH access (user: git)", type: .ssh, category: "Git Hosting"),
@@ -237,4 +238,5 @@ final class LibraryStore: ObservableObject {
             LibraryItem(name: "digitalocean", value: "", description: "DigitalOcean droplet template (user: root)", type: .ssh, category: "Cloud Providers"),
         ]),
     ]
+    // swiftlint:enable line_length
 }

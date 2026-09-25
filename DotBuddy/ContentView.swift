@@ -195,7 +195,8 @@ struct ContentView: View {
                 Button("Add Source Line") { viewModel.fixSourced() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This will append a source line for \(viewModel.fileName) to your shell profile (\(ShellProfileDetector.firstExistingProfile())).")
+                let profile = ShellProfileDetector.firstExistingProfile()
+                Text("This will append a source line for \(viewModel.fileName) to your shell profile (\(profile)).")
             }
     }
 
