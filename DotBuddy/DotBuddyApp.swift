@@ -13,6 +13,7 @@ struct DotBuddyApp: App {
     @State private var activeSection: AppSection?
     @State private var menuBarSearch = ""
     @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+    @AppStorage("preferredTerminal") private var preferredTerminal = TerminalApp.terminal.rawValue
 
     var body: some Scene {
         Window("DotBuddy", id: "main") {
@@ -242,13 +243,8 @@ struct DotBuddyApp: App {
                     .help(host.isEnabled ? "Disable" : "Enable")
 
                     Button {
-                        let escaped = host.hostPattern.replacingOccurrences(of: "\"", with: "\\\"")
-                        let script = "tell application \"Terminal\" to do script \"ssh \(escaped)\""
-                        if let appleScript = NSAppleScript(source: script) {
-                            var error: NSDictionary?
-                            appleScript.executeAndReturnError(&error)
-                        }
-                        NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/Utilities/Terminal.app"))
+                        let terminal = TerminalApp(rawValue: preferredTerminal) ?? .terminal
+                        terminal.launchSSH(host: host.hostPattern)
                     } label: {
                         HStack {
                             Text(host.hostPattern)
@@ -261,7 +257,7 @@ struct DotBuddyApp: App {
                         }
                     }
                     .buttonStyle(.plain)
-                    .help("Connect via SSH in Terminal")
+                    .help("Connect via SSH in \(preferredTerminal)")
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
