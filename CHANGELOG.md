@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/zackwag/DotBuddy/compare/v2.7.0...v2.8.0) (2026-09-25)
+
+
+### Features
+
+* Add enhancements across all sections ([#31](https://github.com/zackwag/DotBuddy/issues/31)) ([8a2db81](https://github.com/zackwag/DotBuddy/commit/8a2db816982b22f9807dff0c021c69138f24a2f9))
+
 ## [2.7.0](https://github.com/zackwag/DotBuddy/compare/v2.6.1...v2.7.0) (2026-09-25)
 
 
