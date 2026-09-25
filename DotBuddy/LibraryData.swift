@@ -5,6 +5,7 @@ import UserNotifications
 enum LibraryItemType: String, Codable {
     case alias
     case environment
+    case ssh
 }
 
 struct LibraryItem: Identifiable, Codable {
@@ -54,12 +55,14 @@ struct RemoteLibraryCategory: Codable {
 struct RemoteLibrary: Codable {
     let aliases: [RemoteLibraryCategory]
     let environment: [RemoteLibraryCategory]
+    let ssh: [RemoteLibraryCategory]?
 }
 
 @MainActor
 final class LibraryStore: ObservableObject {
     @Published var aliasCategories: [LibraryCategory] = []
     @Published var envCategories: [LibraryCategory] = []
+    @Published var sshCategories: [LibraryCategory] = []
     @Published var isLoading = true
     @Published var isUsingBundledData = false
     private var didLoad = false
@@ -82,6 +85,8 @@ final class LibraryStore: ObservableObject {
         "Cloud & Infrastructure": "cloud",
         "Path Extensions": "point.topleft.down.to.point.bottomright.curvepath",
         "Application Config": "gearshape.2",
+        "Git Hosting": "arrow.triangle.branch",
+        "Cloud Providers": "cloud",
     ]
 
     func load() {
@@ -93,6 +98,8 @@ final class LibraryStore: ObservableObject {
                 let remote = try JSONDecoder().decode(RemoteLibrary.self, from: data)
                 aliasCategories = remote.aliases.map { Self.toCategory($0) }
                 envCategories = remote.environment.map { Self.toCategory($0) }
+                sshCategories = (remote.ssh ?? []).map { Self.toCategory($0) }
+                if sshCategories.isEmpty { sshCategories = Self.bundledSSHCategories }
             } catch {
                 loadBundledFallback()
                 isUsingBundledData = true
@@ -113,6 +120,7 @@ final class LibraryStore: ObservableObject {
     private func loadBundledFallback() {
         aliasCategories = Self.bundledAliasCategories
         envCategories = Self.bundledEnvCategories
+        sshCategories = Self.bundledSSHCategories
     }
 
     private func sendFetchFailedNotification() {
@@ -213,6 +221,20 @@ final class LibraryStore: ObservableObject {
                 name: "PATH", value: "$HOME/.local/bin:$PATH",
                 description: "Add local bin to PATH", type: .environment, category: "Path Extensions"
             ),
+        ]),
+    ]
+
+    static let bundledSSHCategories: [LibraryCategory] = [
+        LibraryCategory(name: "Git Hosting", icon: "arrow.triangle.branch", items: [
+            LibraryItem(name: "github.com", value: "github.com", description: "GitHub SSH access (user: git)", type: .ssh, category: "Git Hosting"),
+            LibraryItem(name: "gitlab.com", value: "gitlab.com", description: "GitLab SSH access (user: git)", type: .ssh, category: "Git Hosting"),
+            LibraryItem(name: "bitbucket.org", value: "bitbucket.org", description: "Bitbucket SSH access (user: git)", type: .ssh, category: "Git Hosting"),
+            LibraryItem(name: "ssh.dev.azure.com", value: "ssh.dev.azure.com", description: "Azure DevOps SSH access (user: git)", type: .ssh, category: "Git Hosting"),
+        ]),
+        LibraryCategory(name: "Cloud Providers", icon: "cloud", items: [
+            LibraryItem(name: "aws-bastion", value: "", description: "AWS bastion host template (user: ec2-user)", type: .ssh, category: "Cloud Providers"),
+            LibraryItem(name: "gcp-instance", value: "", description: "GCP instance template (user: your-username)", type: .ssh, category: "Cloud Providers"),
+            LibraryItem(name: "digitalocean", value: "", description: "DigitalOcean droplet template (user: root)", type: .ssh, category: "Cloud Providers"),
         ]),
     ]
 }

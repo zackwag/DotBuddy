@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct SSHContentView: View {
     @ObservedObject var viewModel: SSHViewModel
+    @ObservedObject var libraryStore: LibraryStore
     var onBack: () -> Void
     @State var isFormVisible = false
     @State var editingHost: SSHHost?
@@ -28,6 +29,9 @@ struct SSHContentView: View {
     @State var showRestoreConfirmation = false
     @State var showBackConfirmation = false
     @State var showKeyGenerator = false
+    @State var showImportPicker = false
+    @State var importedCount: Int?
+    @State var showLibrary = false
     @Environment(\.undoManager) var undoManager
 
     var body: some View {
@@ -131,6 +135,34 @@ struct SSHContentView: View {
                         viewModel.testAllResults.removeAll { ids.contains($0.id) }
                     }
                 )
+            }
+            .sheet(isPresented: $showLibrary) {
+                LibrarySheetView(
+                    type: .ssh,
+                    existingNames: Set(viewModel.workingHosts.map(\.hostPattern)),
+                    existingGroups: viewModel.groups,
+                    libraryStore: libraryStore
+                ) { item in
+                    viewModel.addHost(SSHHost(
+                        hostPattern: item.name,
+                        hostname: item.value,
+                        group: item.category
+                    ))
+                }
+            }
+            .alert("Import Complete", isPresented: Binding(
+                get: { importedCount != nil },
+                set: { if !$0 { importedCount = nil } }
+            )) {
+                Button("OK") { importedCount = nil }
+            } message: {
+                Text("\(importedCount ?? 0) new host\(importedCount == 1 ? "" : "s") imported.")
+            }
+            .onChange(of: showImportPicker) { _, show in
+                if show {
+                    showImportPicker = false
+                    DispatchQueue.main.async { openImportPicker() }
+                }
             }
     }
 

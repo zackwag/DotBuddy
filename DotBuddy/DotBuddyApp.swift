@@ -24,7 +24,7 @@ struct DotBuddyApp: App {
                     case .environment:
                         EnvContentView(viewModel: envViewModel, libraryStore: libraryStore, onBack: { activeSection = nil })
                     case .sshConfig:
-                        SSHContentView(viewModel: sshViewModel, onBack: { activeSection = nil })
+                        SSHContentView(viewModel: sshViewModel, libraryStore: libraryStore) { activeSection = nil }
                     case .knownHosts:
                         KnownHostsContentView(viewModel: knownHostsViewModel, onBack: { activeSection = nil })
                     case .library:
@@ -242,8 +242,13 @@ struct DotBuddyApp: App {
                     .help(host.isEnabled ? "Disable" : "Enable")
 
                     Button {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString("ssh \(host.hostPattern)", forType: .string)
+                        let escaped = host.hostPattern.replacingOccurrences(of: "\"", with: "\\\"")
+                        let script = "tell application \"Terminal\" to do script \"ssh \(escaped)\""
+                        if let appleScript = NSAppleScript(source: script) {
+                            var error: NSDictionary?
+                            appleScript.executeAndReturnError(&error)
+                        }
+                        NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/Utilities/Terminal.app"))
                     } label: {
                         HStack {
                             Text(host.hostPattern)
@@ -256,7 +261,7 @@ struct DotBuddyApp: App {
                         }
                     }
                     .buttonStyle(.plain)
-                    .help("Click to copy SSH command")
+                    .help("Connect via SSH in Terminal")
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)

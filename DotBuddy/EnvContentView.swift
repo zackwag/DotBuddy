@@ -32,6 +32,7 @@ struct EnvContentView: View {
     @State var replaceFind = ""
     @State var replaceWith = ""
     @State var showReplaceConfirmation = false
+    @State var showFixSourcedConfirmation = false
     @Environment(\.undoManager) var undoManager
 
     var body: some View {
@@ -183,6 +184,12 @@ struct EnvContentView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("You have unsaved changes. What would you like to do?")
+            }
+            .alert("Add Source Line", isPresented: $showFixSourcedConfirmation) {
+                Button("Add Source Line") { viewModel.fixSourced() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will append a source line for \(viewModel.fileName) to your shell profile (\(ShellProfileDetector.firstExistingProfile())).")
             }
     }
 
@@ -535,7 +542,7 @@ struct EnvContentView: View {
             Text("This file isn't sourced in your shell profile.")
                 .font(.callout)
             Spacer()
-            Button("Fix") { viewModel.fixSourced() }
+            Button("Fix") { showFixSourcedConfirmation = true }
                 .controlSize(.small)
                 .buttonStyle(.borderedProminent)
             Button("Dismiss") { viewModel.isSourced = true }
