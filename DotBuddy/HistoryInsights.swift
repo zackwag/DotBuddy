@@ -12,16 +12,30 @@ final class HistoryInsights: ObservableObject {
     @Published var suggestions: [CommandSuggestion] = []
     @Published var isLoading = false
     private var didLoad = false
+    private static let dismissedKey = "dismissedHistorySuggestions"
+
+    var dismissedCommands: Set<String> {
+        Set(UserDefaults.standard.stringArray(forKey: Self.dismissedKey) ?? [])
+    }
+
+    func dismiss(_ suggestion: CommandSuggestion) {
+        var dismissed = UserDefaults.standard.stringArray(forKey: Self.dismissedKey) ?? []
+        dismissed.append(suggestion.command)
+        UserDefaults.standard.set(dismissed, forKey: Self.dismissedKey)
+        suggestions.removeAll { $0.command == suggestion.command }
+    }
 
     func analyze(existingAliases: [String: String]) {
         guard !didLoad else { return }
         didLoad = true
         isLoading = true
+        let dismissed = dismissedCommands
 
         Task.detached { [weak self] in
-            let suggestions = HistoryInsights.parseHistory(existingAliases: existingAliases)
+            let parsed = HistoryInsights.parseHistory(existingAliases: existingAliases)
+            let filtered = parsed.filter { !dismissed.contains($0.command) }
             await MainActor.run { [weak self] in
-                self?.suggestions = suggestions
+                self?.suggestions = filtered
                 self?.isLoading = false
             }
         }
@@ -53,11 +67,25 @@ final class HistoryInsights: ObservableObject {
         return []
     }
 
+    private nonisolated static func expandAliasValue(_ value: String, aliases: [String: String], depth: Int = 0) -> String {
+        guard depth < 10 else { return value }
+        let parts = value.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+        guard let first = parts.first, let expanded = aliases[first] else { return value }
+        let rest = parts.dropFirst().joined(separator: " ")
+        let resolved = expandAliasValue(expanded, aliases: aliases, depth: depth + 1)
+        return rest.isEmpty ? resolved : resolved + " " + rest
+    }
+
     private nonisolated static func countCommands(in lines: [String], existingAliases: [String: String]) -> [String: Int] {
-        let aliasedCommands = Set(existingAliases.values)
+        var expandedCommands: Set<String> = []
+        for (_, value) in existingAliases {
+            expandedCommands.insert(value)
+            let expanded = expandAliasValue(value, aliases: existingAliases)
+            expandedCommands.insert(expanded)
+        }
         var counts: [String: Int] = [:]
         for line in lines {
-            guard let normalized = normalizedCommand(from: line), !aliasedCommands.contains(normalized) else { continue }
+            guard let normalized = normalizedCommand(from: line), !expandedCommands.contains(normalized) else { continue }
             counts[normalized, default: 0] += 1
         }
         return counts

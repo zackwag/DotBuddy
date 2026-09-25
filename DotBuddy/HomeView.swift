@@ -304,9 +304,19 @@ struct HomeView: View {
                             command: suggestion.command,
                             group: "From History"
                         )
+                        historyInsights.dismiss(suggestion)
                     }
                     .controlSize(.small)
                     .disabled(!aliasViewModel.hasFile)
+                    Button {
+                        historyInsights.dismiss(suggestion)
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Dismiss suggestion")
                 }
             }
         }
