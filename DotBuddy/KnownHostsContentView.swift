@@ -98,6 +98,17 @@ struct KnownHostsContentView: View {
                 DispatchQueue.main.async { openFilePicker() }
             }
         }
+        .sheet(isPresented: $viewModel.showTestResults) {
+            KnownHostTestResultsView(
+                results: viewModel.testResults,
+                skippedCount: viewModel.testSkippedCount,
+                isTesting: viewModel.isTesting,
+                onDismiss: { viewModel.showTestResults = false },
+                onRemoveHosts: { ids in
+                    viewModel.removeHostsByIDs(ids)
+                }
+            )
+        }
     }
 
     var noFileState: some View {
@@ -335,6 +346,14 @@ struct KnownHostsContentView: View {
                 }
                 .help("Select or deselect all visible hosts")
             }
+        }
+
+        ToolbarItem(placement: .primaryAction) {
+            Button(action: { viewModel.testAllHosts() }) {
+                Label("Test All", systemImage: "antenna.radiowaves.left.and.right")
+            }
+            .help("Test reachability of all known hosts")
+            .disabled(!viewModel.hasFile || viewModel.isTesting || viewModel.workingHosts.isEmpty)
         }
 
         ToolbarItem(placement: .primaryAction) {
