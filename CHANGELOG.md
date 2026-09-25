@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/zackwag/DotBuddy/compare/v2.6.0...v2.6.1) (2026-09-25)
+
+
+### Bug Fixes
+
+* Improve shell source detection and alias suggestions ([#26](https://github.com/zackwag/DotBuddy/issues/26)) ([4944881](https://github.com/zackwag/DotBuddy/commit/494488134af39686832b52d6c85ec502743d3ca9))
+
 ## [2.6.0](https://github.com/zackwag/DotBuddy/compare/v2.5.1...v2.6.0) (2026-09-20)
 
 
