@@ -53,6 +53,8 @@
 		E70001002F0B0001005580E9 /* SSHConnectionTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70001012F0B0001005580E9 /* SSHConnectionTester.swift */; };
 		E70001022F0B0002005580E9 /* SSHTestAllResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70001032F0B0002005580E9 /* SSHTestAllResultsView.swift */; };
 		E53F68E52F0C0001005580E9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53F68E62F0C0001005580E9 /* SettingsView.swift */; };
+		F50001002F0C0002005580E9 /* KnownHostTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50001012F0C0002005580E9 /* KnownHostTester.swift */; };
+		F50001022F0C0003005580E9 /* KnownHostTestResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50001032F0C0003005580E9 /* KnownHostTestResultsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +106,8 @@
 		E70001012F0B0001005580E9 /* SSHConnectionTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHConnectionTester.swift; sourceTree = "<group>"; };
 		E70001032F0B0002005580E9 /* SSHTestAllResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHTestAllResultsView.swift; sourceTree = "<group>"; };
 		E53F68E62F0C0001005580E9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F50001012F0C0002005580E9 /* KnownHostTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostTester.swift; sourceTree = "<group>"; };
+		F50001032F0C0003005580E9 /* KnownHostTestResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnownHostTestResultsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +183,8 @@
 				E70001012F0B0001005580E9 /* SSHConnectionTester.swift */,
 				E70001032F0B0002005580E9 /* SSHTestAllResultsView.swift */,
 				E53F68E62F0C0001005580E9 /* SettingsView.swift */,
+				F50001012F0C0002005580E9 /* KnownHostTester.swift */,
+				F50001032F0C0003005580E9 /* KnownHostTestResultsView.swift */,
 				A42103012C625F73005580E9 /* Assets.xcassets */,
 				A42103062C625F73005580E9 /* DotBuddy.entitlements */,
 				A42103032C625F73005580E9 /* Preview Content */,
@@ -330,6 +336,8 @@
 				E70001002F0B0001005580E9 /* SSHConnectionTester.swift in Sources */,
 				E70001022F0B0002005580E9 /* SSHTestAllResultsView.swift in Sources */,
 				E53F68E52F0C0001005580E9 /* SettingsView.swift in Sources */,
+				F50001002F0C0002005580E9 /* KnownHostTester.swift in Sources */,
+				F50001022F0C0003005580E9 /* KnownHostTestResultsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,6 +16,10 @@ final class KnownHostsViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var showError = false
     @Published var fileChangedExternally = false
+    @Published var testResults: [KnownHostTestResult] = []
+    @Published var isTesting = false
+    @Published var showTestResults = false
+    var testSkippedCount = 0
     private var fileWatcher: FileWatcher?
     private var suppressNextWatch = false
 
@@ -134,6 +138,44 @@ final class KnownHostsViewModel: ObservableObject {
                 ? a.hostnames.localizedCaseInsensitiveCompare(b.hostnames) == .orderedAscending
                 : a.hostnames.localizedCaseInsensitiveCompare(b.hostnames) == .orderedDescending
         }
+    }
+
+    func testAllHosts() {
+        let testable = workingHosts.filter { !$0.isHashed }
+        testSkippedCount = workingHosts.count - testable.count
+        testResults = testable.map {
+            KnownHostTestResult(id: $0.id, hostname: $0.hostnameList.first ?? $0.hostnames, status: .idle)
+        }
+        isTesting = true
+        showTestResults = true
+
+        Task.detached { [testable] in
+            for host in testable {
+                let firstHost = host.hostnameList.first ?? host.hostnames
+                let target = KnownHostTester.HostTarget(raw: firstHost)
+                await MainActor.run { [weak self] in
+                    if let idx = self?.testResults.firstIndex(where: { $0.id == host.id }) {
+                        self?.testResults[idx] = KnownHostTestResult(id: host.id, hostname: firstHost, status: .testing)
+                    }
+                }
+                let success = KnownHostTester.test(target: target)
+                await MainActor.run { [weak self] in
+                    if let idx = self?.testResults.firstIndex(where: { $0.id == host.id }) {
+                        self?.testResults[idx] = KnownHostTestResult(
+                            id: host.id, hostname: firstHost, status: success ? .success : .failure
+                        )
+                    }
+                }
+            }
+            await MainActor.run { [weak self] in
+                self?.isTesting = false
+            }
+        }
+    }
+
+    func removeHostsByIDs(_ ids: Set<UUID>) {
+        workingHosts.removeAll { ids.contains($0.id) }
+        testResults.removeAll { ids.contains($0.id) }
     }
 
     func saveChanges() {
