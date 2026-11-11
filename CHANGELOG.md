@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/zackwag/DotBuddy/compare/v2.8.0...v2.8.1) (2026-11-11)
+
+
+### Miscellaneous Chores
+
+* fix dependabot commit-message prefixes for conventional commits ([#34](https://github.com/zackwag/DotBuddy/issues/34)) ([642c80f](https://github.com/zackwag/DotBuddy/commit/642c80fe2d7e5c25eddcb6b7341a0c32bc2f0d5f))
+
 ## [2.8.0](https://github.com/zackwag/DotBuddy/compare/v2.7.0...v2.8.0) (2026-09-25)
 
 
