@@ -33,28 +33,35 @@ struct GitConfigFileManager {
         key.range(of: #"^[A-Za-z][A-Za-z0-9-]*$"#, options: .regularExpression) != nil
     }
 
-    // MARK: - Set
+    // MARK: - Get / Set
 
-    /// Sets each key like `git config --global section.key value`: the first existing match is updated and
-    /// any duplicates are removed; otherwise the entry goes at the end of its section (or of the file).
-    static func setting(_ values: [GitConfigEntry], in entries: [GitConfigEntry]) -> [GitConfigEntry] {
+    /// The effective value, like `git config --get`: the last match wins.
+    static func value(section: String, key: String, in entries: [GitConfigEntry]) -> String? {
+        entries.last { matches($0, section: section, key: key) }?.value
+    }
+
+    /// Like `git config --global section.key value` (or `--unset-all` when `value` is nil): the first existing match
+    /// is updated and duplicates are removed; otherwise the entry goes at the end of its section, or of the file.
+    static func setting(section: String, key: String, to value: String?, in entries: [GitConfigEntry]) -> [GitConfigEntry] {
         var result = entries
-        for value in values {
-            let matches = { (entry: GitConfigEntry) in
-                normalizedSection(entry.section) == normalizedSection(value.section) &&
-                entry.key.caseInsensitiveCompare(value.key) == .orderedSame
-            }
-            if let first = result.firstIndex(where: matches) {
-                result[first].value = value.value
-                let keptID = result[first].id
-                result.removeAll { matches($0) && $0.id != keptID }
-            } else if let last = result.lastIndex(where: { normalizedSection($0.section) == normalizedSection(value.section) }) {
-                result.insert(value, at: last + 1)
-            } else {
-                result.append(value)
-            }
+        guard let value else {
+            result.removeAll { matches($0, section: section, key: key) }
+            return result
+        }
+        if let first = result.firstIndex(where: { matches($0, section: section, key: key) }) {
+            result[first].value = value
+            let keptID = result[first].id
+            result.removeAll { matches($0, section: section, key: key) && $0.id != keptID }
+        } else if let last = result.lastIndex(where: { normalizedSection($0.section) == normalizedSection(section) }) {
+            result.insert(GitConfigEntry(section: section, key: key, value: value), at: last + 1)
+        } else {
+            result.append(GitConfigEntry(section: section, key: key, value: value))
         }
         return result
+    }
+
+    private static func matches(_ entry: GitConfigEntry, section: String, key: String) -> Bool {
+        normalizedSection(entry.section) == normalizedSection(section) && entry.key.caseInsensitiveCompare(key) == .orderedSame
     }
 
     /// Section names are case-insensitive in git; quoted subsection names are case-sensitive.

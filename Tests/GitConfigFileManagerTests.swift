@@ -128,7 +128,7 @@ final class SetGitConfigTests: XCTestCase {
             GitConfigEntry(section: "core", key: "autocrlf", value: "input"),
             GitConfigEntry(section: "core", key: "editor", value: "nano"),
         ]
-        let result = GitConfigFileManager.setting(GitConfigEntry.vsCodeEditor, in: existing)
+        let result = GitConfigFileManager.setting(section: "core", key: "editor", to: "code --wait", in: existing)
         XCTAssertEqual(result.map(\.key), ["Editor", "autocrlf"])
         XCTAssertEqual(result[0].value, "code --wait")
         XCTAssertEqual(result[0].id, existing[0].id)
@@ -139,21 +139,71 @@ final class SetGitConfigTests: XCTestCase {
             GitConfigEntry(section: "diff", key: "colorMoved", value: "zebra"),
             GitConfigEntry(section: "user", key: "name", value: "Jane"),
         ]
-        let result = GitConfigFileManager.setting(GitConfigEntry.vsCodeDiffTool, in: existing)
-        XCTAssertEqual(result.map(\.section), ["diff", "diff", "user", "difftool \"vscode\""])
+        var result = GitConfigFileManager.setting(section: "diff", key: "tool", to: "vscode", in: existing)
+        result = GitConfigFileManager.setting(section: "merge", key: "tool", to: "vscode", in: result)
+        XCTAssertEqual(result.map(\.section), ["diff", "diff", "user", "merge"])
         XCTAssertEqual(result[1].value, "vscode")
+    }
+
+    func testNilUnsetsAllMatches() {
+        let existing = [
+            GitConfigEntry(section: "diff", key: "tool", value: "opendiff"),
+            GitConfigEntry(section: "DIFF", key: "TOOL", value: "bc"),
+            GitConfigEntry(section: "diff", key: "colorMoved", value: "zebra"),
+        ]
+        let result = GitConfigFileManager.setting(section: "diff", key: "tool", to: nil, in: existing)
+        XCTAssertEqual(result.map(\.key), ["colorMoved"])
     }
 
     func testSubsectionMatchIsCaseSensitive() {
         let existing = [GitConfigEntry(section: "difftool \"VSCode\"", key: "cmd", value: "old")]
-        let result = GitConfigFileManager.setting(GitConfigEntry.vsCodeDiffTool, in: existing)
-        XCTAssertEqual(result.first?.value, "old")
-        XCTAssertEqual(result.count, 3)
+        let result = GitConfigFileManager.setting(section: "difftool \"vscode\"", key: "cmd", to: "new", in: existing)
+        XCTAssertEqual(result.map(\.value), ["old", "new"])
     }
 
-    func testPresetsSerializeUnquoted() {
-        let output = GitConfigFileManager.serialize(entries: GitConfigEntry.vsCodeMergeTool)
-        XCTAssertEqual(output, "[merge]\n\ttool = vscode\n[mergetool \"vscode\"]\n\tcmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED\n")
+    func testValueReturnsLastMatch() {
+        let entries = [
+            GitConfigEntry(section: "core", key: "editor", value: "vim"),
+            GitConfigEntry(section: "Core", key: "editor", value: "nano"),
+        ]
+        XCTAssertEqual(GitConfigFileManager.value(section: "core", key: "editor", in: entries), "nano")
+        XCTAssertNil(GitConfigFileManager.value(section: "diff", key: "tool", in: entries))
+    }
+}
+
+final class GitToolDetectorTests: XCTestCase {
+    func testParsesOnlyAvailableTools() {
+        let output = """
+        'git difftool --tool=<tool>' may be set to one of the following:
+        \t\topendiff         Use FileMerge (requires a graphical session)
+        \t\tvscode           Use Visual Studio Code (requires a graphical session)
+
+        The following tools are valid, but not currently available:
+        \t\tbc               Use Beyond Compare (requires a graphical session)
+        """
+        let tools = GitToolDetector.parseToolHelp(output)
+        XCTAssertEqual(tools.map(\.name), ["opendiff", "vscode"])
+        XCTAssertEqual(tools[1].description, "Use Visual Studio Code (requires a graphical session)")
+    }
+
+    func testParseToleratesNoise() {
+        XCTAssertTrue(GitToolDetector.parseToolHelp("").isEmpty)
+        XCTAssertTrue(GitToolDetector.parseToolHelp("zsh: command not found: git").isEmpty)
+    }
+
+    func testShellQuoting() {
+        XCTAssertEqual(GitToolDetector.shellQuoted("/usr/bin/vim"), "/usr/bin/vim")
+        XCTAssertEqual(GitToolDetector.shellQuoted("/Applications/Visual Studio Code.app"), "'/Applications/Visual Studio Code.app'")
+        XCTAssertEqual(GitToolDetector.shellQuoted("/tmp/it's"), #"'/tmp/it'\''s'"#)
+    }
+
+    func testEditorCommandForPlainExecutable() {
+        XCTAssertEqual(GitToolDetector.editorCommand(forFileAt: URL(fileURLWithPath: "/usr/bin/vim")), "/usr/bin/vim")
+    }
+
+    func testEditorCommandForUnknownAppUsesOpen() {
+        let url = URL(fileURLWithPath: "/Applications/Some Editor.app")
+        XCTAssertEqual(GitToolDetector.editorCommand(forFileAt: url), "open -W -n -a '/Applications/Some Editor.app'")
     }
 }
 

@@ -10,6 +10,7 @@ struct GitConfigContentView: View {
     @State private var showDiscardConfirmation = false
     @State private var showRestoreConfirmation = false
     @State private var showBackConfirmation = false
+    @State private var showToolsSheet = false
     @State private var showForm = false
     @State private var editingID: UUID?
     @State private var formSection = ""
@@ -67,6 +68,9 @@ struct GitConfigContentView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This will replace the current file with the last saved backup. Unsaved changes will be lost.")
+        }
+        .sheet(isPresented: $showToolsSheet) {
+            GitToolsSheet(viewModel: viewModel)
         }
         .alert("Unsaved Changes", isPresented: $showBackConfirmation) {
             Button("Save & Go Back") {
@@ -310,18 +314,10 @@ struct GitConfigContentView: View {
         }
 
         ToolbarItem(placement: .primaryAction) {
-            Menu {
-                Button("Use VS Code for Everything") {
-                    viewModel.apply(GitConfigEntry.vsCodeEditor + GitConfigEntry.vsCodeDiffTool + GitConfigEntry.vsCodeMergeTool)
-                }
-                Divider()
-                Button("VS Code as Editor") { viewModel.apply(GitConfigEntry.vsCodeEditor) }
-                Button("VS Code as Diff Tool") { viewModel.apply(GitConfigEntry.vsCodeDiffTool) }
-                Button("VS Code as Merge Tool") { viewModel.apply(GitConfigEntry.vsCodeMergeTool) }
-            } label: {
+            Button(action: { showToolsSheet = true }) {
                 Label("Tools", systemImage: "chevron.left.forwardslash.chevron.right")
             }
-            .help("Set the editor, diff tool, and merge tool git uses")
+            .help("Choose the editor, diff tool, and merge tool git uses")
             .disabled(!viewModel.hasFile)
         }
 

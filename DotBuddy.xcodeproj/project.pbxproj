@@ -59,6 +59,8 @@
 		F600A3002F0D0001005580E9 /* GitConfigFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F600A4002F0D0001005580E9 /* GitConfigFileManager.swift */; };
 		F600A5002F0D0001005580E9 /* GitConfigViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F600A6002F0D0001005580E9 /* GitConfigViewModel.swift */; };
 		F600A7002F0D0001005580E9 /* GitConfigContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F600A8002F0D0001005580E9 /* GitConfigContentView.swift */; };
+		F600A9002F0D0001005580E9 /* GitToolDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F600AA002F0D0001005580E9 /* GitToolDetector.swift */; };
+		F600AB002F0D0001005580E9 /* GitToolsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F600AC002F0D0001005580E9 /* GitToolsSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +118,8 @@
 		F600A4002F0D0001005580E9 /* GitConfigFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitConfigFileManager.swift; sourceTree = "<group>"; };
 		F600A6002F0D0001005580E9 /* GitConfigViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitConfigViewModel.swift; sourceTree = "<group>"; };
 		F600A8002F0D0001005580E9 /* GitConfigContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitConfigContentView.swift; sourceTree = "<group>"; };
+		F600AA002F0D0001005580E9 /* GitToolDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitToolDetector.swift; sourceTree = "<group>"; };
+		F600AC002F0D0001005580E9 /* GitToolsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitToolsSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,8 @@
 				F600A4002F0D0001005580E9 /* GitConfigFileManager.swift */,
 				F600A6002F0D0001005580E9 /* GitConfigViewModel.swift */,
 				F600A8002F0D0001005580E9 /* GitConfigContentView.swift */,
+				F600AA002F0D0001005580E9 /* GitToolDetector.swift */,
+				F600AC002F0D0001005580E9 /* GitToolsSheet.swift */,
 				A42103012C625F73005580E9 /* Assets.xcassets */,
 				A42103062C625F73005580E9 /* DotBuddy.entitlements */,
 				A42103032C625F73005580E9 /* Preview Content */,
@@ -354,6 +360,8 @@
 				F600A3002F0D0001005580E9 /* GitConfigFileManager.swift in Sources */,
 				F600A5002F0D0001005580E9 /* GitConfigViewModel.swift in Sources */,
 				F600A7002F0D0001005580E9 /* GitConfigContentView.swift in Sources */,
+				F600A9002F0D0001005580E9 /* GitToolDetector.swift in Sources */,
+				F600AB002F0D0001005580E9 /* GitToolsSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

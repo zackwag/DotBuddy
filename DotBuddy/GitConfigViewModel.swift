@@ -122,8 +122,15 @@ final class GitConfigViewModel: ObservableObject {
         workingEntries = updated
     }
 
-    func apply(_ values: [GitConfigEntry]) {
-        workingEntries = GitConfigFileManager.setting(values, in: workingEntries)
+    func value(section: String, key: String) -> String? {
+        GitConfigFileManager.value(section: section, key: key, in: workingEntries)
+    }
+
+    /// Applies several sets/unsets (nil value) as one change, so it undoes in one step.
+    func setValues(_ values: [(section: String, key: String, value: String?)]) {
+        workingEntries = values.reduce(workingEntries) { entries, change in
+            GitConfigFileManager.setting(section: change.section, key: change.key, to: change.value, in: entries)
+        }
     }
 
     func duplicateEntry(_ entry: GitConfigEntry) {

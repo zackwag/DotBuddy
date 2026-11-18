@@ -21,6 +21,7 @@ let package = Package(
                 "KnownHostsFileManager.swift",
                 "GitConfigEntry.swift",
                 "GitConfigFileManager.swift",
+                "GitToolDetector.swift",
             ]
         ),
         .testTarget(
