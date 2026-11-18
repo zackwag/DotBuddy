@@ -9,6 +9,7 @@ struct DotBuddyApp: App {
     @StateObject private var envViewModel = EnvViewModel()
     @StateObject private var sshViewModel = SSHViewModel()
     @StateObject private var knownHostsViewModel = KnownHostsViewModel()
+    @StateObject private var gitConfigViewModel = GitConfigViewModel()
     @StateObject private var libraryStore = LibraryStore()
     @State private var activeSection: AppSection?
     @State private var menuBarSearch = ""
@@ -28,6 +29,8 @@ struct DotBuddyApp: App {
                         SSHContentView(viewModel: sshViewModel, libraryStore: libraryStore) { activeSection = nil }
                     case .knownHosts:
                         KnownHostsContentView(viewModel: knownHostsViewModel, onBack: { activeSection = nil })
+                    case .gitConfig:
+                        GitConfigContentView(viewModel: gitConfigViewModel, onBack: { activeSection = nil })
                     case .library:
                         LibraryView(
                             aliasViewModel: aliasViewModel,
@@ -42,6 +45,7 @@ struct DotBuddyApp: App {
                         envViewModel: envViewModel,
                         sshViewModel: sshViewModel,
                         knownHostsViewModel: knownHostsViewModel,
+                        gitConfigViewModel: gitConfigViewModel,
                         activeSection: $activeSection
                     )
                 }
@@ -53,10 +57,12 @@ struct DotBuddyApp: App {
                 appDelegate.envViewModel = envViewModel
                 appDelegate.sshViewModel = sshViewModel
                 appDelegate.knownHostsViewModel = knownHostsViewModel
+                appDelegate.gitConfigViewModel = gitConfigViewModel
                 aliasViewModel.loadAliases()
                 envViewModel.loadVariables()
                 sshViewModel.loadHosts()
                 knownHostsViewModel.loadHosts()
+                gitConfigViewModel.loadEntries()
                 libraryStore.load()
             }
         }
@@ -273,6 +279,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     var envViewModel: EnvViewModel?
     var sshViewModel: SSHViewModel?
     var knownHostsViewModel: KnownHostsViewModel?
+    var gitConfigViewModel: GitConfigViewModel?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let center = UNUserNotificationCenter.current()
@@ -296,8 +303,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         let envUnsaved = envViewModel?.hasUnsavedChanges ?? false
         let sshUnsaved = sshViewModel?.hasUnsavedChanges ?? false
         let knownHostsUnsaved = knownHostsViewModel?.hasUnsavedChanges ?? false
+        let gitConfigUnsaved = gitConfigViewModel?.hasUnsavedChanges ?? false
 
-        guard aliasUnsaved || envUnsaved || sshUnsaved || knownHostsUnsaved else {
+        guard aliasUnsaved || envUnsaved || sshUnsaved || knownHostsUnsaved || gitConfigUnsaved else {
             return .terminateNow
         }
 
@@ -316,6 +324,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             if envUnsaved { envViewModel?.saveChanges() }
             if sshUnsaved { sshViewModel?.saveChanges() }
             if knownHostsUnsaved { knownHostsViewModel?.saveChanges() }
+            if gitConfigUnsaved { gitConfigViewModel?.saveChanges() }
             return .terminateNow
         case .alertSecondButtonReturn:
             return .terminateNow

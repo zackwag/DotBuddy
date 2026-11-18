@@ -19,6 +19,9 @@ let package = Package(
                 "SSHConfigFileManager.swift",
                 "KnownHost.swift",
                 "KnownHostsFileManager.swift",
+                "GitConfigEntry.swift",
+                "GitConfigFileManager.swift",
+                "GitToolDetector.swift",
             ]
         ),
         .testTarget(

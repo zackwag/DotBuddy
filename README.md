@@ -33,6 +33,14 @@ A macOS app for managing shell aliases and environment variables through a visua
 - Secret flag persists in the file as a trailing `# [secret]` comment
 - Multi-select with bulk actions (enable, disable, delete, move to group)
 
+### Git Config
+
+- Edit your global `~/.gitconfig` (or `~/.config/git/config`) grouped by section
+- Add, edit, duplicate, and remove entries, including subsections like `[remote "origin"]` and `[includeIf "gitdir:..."]`
+- Multi-valued keys (e.g. repeated `credential.helper`) keep their order
+- Values are quoted and escaped the way git expects; symlinked configs are written through the link
+- Comments are not preserved on save; a `.bak` backup is written first
+
 ### Snippet Library
 - Browse curated alias and environment variable suggestions
 - Categories include Git, Docker, Kubernetes, Node.js, Python, and more

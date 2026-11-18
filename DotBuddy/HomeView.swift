@@ -5,6 +5,7 @@ enum AppSection: Hashable {
     case environment
     case sshConfig
     case knownHosts
+    case gitConfig
     case library
 }
 
@@ -13,6 +14,7 @@ struct HomeView: View {
     @ObservedObject var envViewModel: EnvViewModel
     @ObservedObject var sshViewModel: SSHViewModel
     @ObservedObject var knownHostsViewModel: KnownHostsViewModel
+    @ObservedObject var gitConfigViewModel: GitConfigViewModel
     @Binding var activeSection: AppSection?
     @StateObject private var historyInsights = HistoryInsights()
 
@@ -46,6 +48,9 @@ struct HomeView: View {
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 4)
+
+                gitConfigCard
+                    .padding(.top, 4)
 
                 libraryCard
                     .padding(.top, 4)
@@ -239,6 +244,41 @@ struct HomeView: View {
             }
             .padding()
             .frame(minWidth: 180, maxWidth: 240, maxHeight: .infinity, alignment: .leading)
+            .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
+        }
+        .buttonStyle(CardButtonStyle())
+    }
+
+    private var gitConfigCard: some View {
+        Button(action: { activeSection = .gitConfig }) {
+            HStack(spacing: 12) {
+                Image(systemName: "arrow.triangle.branch")
+                    .font(.title2)
+                    .foregroundStyle(.orange)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Git Config")
+                        .font(.headline)
+                    if gitConfigViewModel.hasFile {
+                        Text("\(gitConfigViewModel.fileName) · \(gitConfigViewModel.entries.count) entries")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("Not configured")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding()
+            .frame(maxWidth: 496, alignment: .leading)
             .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.quaternary))
         }
