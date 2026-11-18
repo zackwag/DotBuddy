@@ -121,9 +121,9 @@ struct GitToolsSheet: View {
     private func apply() {
         let trimmedEditor = editor.trimmingCharacters(in: .whitespaces)
         viewModel.setValues([
-            ("core", "editor", trimmedEditor.isEmpty ? nil : trimmedEditor),
-            ("diff", "tool", diffTool.isEmpty ? nil : diffTool),
-            ("merge", "tool", mergeTool.isEmpty ? nil : mergeTool),
+            .init(section: "core", key: "editor", value: trimmedEditor.isEmpty ? nil : trimmedEditor),
+            .init(section: "diff", key: "tool", value: diffTool.isEmpty ? nil : diffTool),
+            .init(section: "merge", key: "tool", value: mergeTool.isEmpty ? nil : mergeTool),
         ])
         dismiss()
     }

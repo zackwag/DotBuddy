@@ -126,8 +126,15 @@ final class GitConfigViewModel: ObservableObject {
         GitConfigFileManager.value(section: section, key: key, in: workingEntries)
     }
 
-    /// Applies several sets/unsets (nil value) as one change, so it undoes in one step.
-    func setValues(_ values: [(section: String, key: String, value: String?)]) {
+    struct Change {
+        let section: String
+        let key: String
+        /// nil unsets the key.
+        let value: String?
+    }
+
+    /// Applies several sets/unsets as one change, so it undoes in one step.
+    func setValues(_ values: [Change]) {
         workingEntries = values.reduce(workingEntries) { entries, change in
             GitConfigFileManager.setting(section: change.section, key: change.key, to: change.value, in: entries)
         }
