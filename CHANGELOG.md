@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/zackwag/DotBuddy/compare/v2.8.1...v2.9.0) (2026-11-18)
+
+
+### Features
+
+* Add global git config editor ([#36](https://github.com/zackwag/DotBuddy/issues/36)) ([5c81957](https://github.com/zackwag/DotBuddy/commit/5c81957a84b27f6d428a581b94cf44ee0dc7d5e4))
+
 ## [2.8.1](https://github.com/zackwag/DotBuddy/compare/v2.8.0...v2.8.1) (2026-11-11)
 
 
