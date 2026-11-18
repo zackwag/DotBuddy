@@ -122,6 +122,10 @@ final class GitConfigViewModel: ObservableObject {
         workingEntries = updated
     }
 
+    func apply(_ values: [GitConfigEntry]) {
+        workingEntries = GitConfigFileManager.setting(values, in: workingEntries)
+    }
+
     func duplicateEntry(_ entry: GitConfigEntry) {
         let copy = GitConfigEntry(section: entry.section, key: entry.key, value: entry.value)
         if let index = workingEntries.firstIndex(where: { $0.id == entry.id }) {

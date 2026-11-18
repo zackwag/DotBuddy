@@ -121,6 +121,42 @@ final class SerializeGitConfigTests: XCTestCase {
     }
 }
 
+final class SetGitConfigTests: XCTestCase {
+    func testUpdatesExistingKeyCaseInsensitivelyAndDropsDuplicates() {
+        let existing = [
+            GitConfigEntry(section: "Core", key: "Editor", value: "vim"),
+            GitConfigEntry(section: "core", key: "autocrlf", value: "input"),
+            GitConfigEntry(section: "core", key: "editor", value: "nano"),
+        ]
+        let result = GitConfigFileManager.setting(GitConfigEntry.vsCodeEditor, in: existing)
+        XCTAssertEqual(result.map(\.key), ["Editor", "autocrlf"])
+        XCTAssertEqual(result[0].value, "code --wait")
+        XCTAssertEqual(result[0].id, existing[0].id)
+    }
+
+    func testAppendsToExistingSectionOrEndOfFile() {
+        let existing = [
+            GitConfigEntry(section: "diff", key: "colorMoved", value: "zebra"),
+            GitConfigEntry(section: "user", key: "name", value: "Jane"),
+        ]
+        let result = GitConfigFileManager.setting(GitConfigEntry.vsCodeDiffTool, in: existing)
+        XCTAssertEqual(result.map(\.section), ["diff", "diff", "user", "difftool \"vscode\""])
+        XCTAssertEqual(result[1].value, "vscode")
+    }
+
+    func testSubsectionMatchIsCaseSensitive() {
+        let existing = [GitConfigEntry(section: "difftool \"VSCode\"", key: "cmd", value: "old")]
+        let result = GitConfigFileManager.setting(GitConfigEntry.vsCodeDiffTool, in: existing)
+        XCTAssertEqual(result.first?.value, "old")
+        XCTAssertEqual(result.count, 3)
+    }
+
+    func testPresetsSerializeUnquoted() {
+        let output = GitConfigFileManager.serialize(entries: GitConfigEntry.vsCodeMergeTool)
+        XCTAssertEqual(output, "[merge]\n\ttool = vscode\n[mergetool \"vscode\"]\n\tcmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED\n")
+    }
+}
+
 final class GitConfigFileManagerIOTests: XCTestCase {
     var tempDir: String!
 

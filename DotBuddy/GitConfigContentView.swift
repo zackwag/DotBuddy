@@ -309,6 +309,22 @@ struct GitConfigContentView: View {
             .disabled(!viewModel.hasFile)
         }
 
+        ToolbarItem(placement: .primaryAction) {
+            Menu {
+                Button("Use VS Code for Everything") {
+                    viewModel.apply(GitConfigEntry.vsCodeEditor + GitConfigEntry.vsCodeDiffTool + GitConfigEntry.vsCodeMergeTool)
+                }
+                Divider()
+                Button("VS Code as Editor") { viewModel.apply(GitConfigEntry.vsCodeEditor) }
+                Button("VS Code as Diff Tool") { viewModel.apply(GitConfigEntry.vsCodeDiffTool) }
+                Button("VS Code as Merge Tool") { viewModel.apply(GitConfigEntry.vsCodeMergeTool) }
+            } label: {
+                Label("Tools", systemImage: "chevron.left.forwardslash.chevron.right")
+            }
+            .help("Set the editor, diff tool, and merge tool git uses")
+            .disabled(!viewModel.hasFile)
+        }
+
         ToolbarItem(placement: .automatic) {
             Menu {
                 Button("Use Default") { viewModel.useDefault() }

@@ -33,6 +33,39 @@ struct GitConfigFileManager {
         key.range(of: #"^[A-Za-z][A-Za-z0-9-]*$"#, options: .regularExpression) != nil
     }
 
+    // MARK: - Set
+
+    /// Sets each key like `git config --global section.key value`: the first existing match is updated and
+    /// any duplicates are removed; otherwise the entry goes at the end of its section (or of the file).
+    static func setting(_ values: [GitConfigEntry], in entries: [GitConfigEntry]) -> [GitConfigEntry] {
+        var result = entries
+        for value in values {
+            let matches = { (entry: GitConfigEntry) in
+                normalizedSection(entry.section) == normalizedSection(value.section) &&
+                entry.key.caseInsensitiveCompare(value.key) == .orderedSame
+            }
+            if let first = result.firstIndex(where: matches) {
+                result[first].value = value.value
+                let keptID = result[first].id
+                result.removeAll { matches($0) && $0.id != keptID }
+            } else if let last = result.lastIndex(where: { normalizedSection($0.section) == normalizedSection(value.section) }) {
+                result.insert(value, at: last + 1)
+            } else {
+                result.append(value)
+            }
+        }
+        return result
+    }
+
+    /// Section names are case-insensitive in git; quoted subsection names are case-sensitive.
+    private static func normalizedSection(_ section: String) -> String {
+        let parts = section.split(separator: " ", maxSplits: 1)
+        guard let name = parts.first else {
+            return section
+        }
+        return name.lowercased() + (parts.count > 1 ? " " + parts[1] : "")
+    }
+
     // MARK: - Serialize
 
     static func serialize(entries: [GitConfigEntry]) -> String {
