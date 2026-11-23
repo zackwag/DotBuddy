@@ -39,93 +39,24 @@ struct KnownHostsContentView: View {
         .toolbar { toolbarContent }
         .navigationTitle("DotBuddy — Known Hosts")
         .navigationSubtitle(viewModel.fileName)
-        .alert("Error", isPresented: $viewModel.showError) {
-            Button("OK") {}
-        } message: {
-            Text(viewModel.errorMessage ?? "An unknown error occurred.")
-        }
-        .alert("Remove Host", isPresented: $showDeleteConfirmation) {
-            Button("Remove", role: .destructive) {
-                if let host = hostToDelete {
-                    viewModel.deleteHost(host)
-                }
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Are you sure you want to remove '\(hostToDelete?.displayName ?? "")'?")
-        }
-        .alert("Remove Selected", isPresented: $showBulkDeleteConfirmation) {
-            Button("Remove \(selectedHosts.count)", role: .destructive) {
-                viewModel.bulkDelete(selectedHosts)
-                selectedHosts.removeAll()
-                selectionMode = false
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Are you sure you want to remove \(selectedHosts.count) known host\(selectedHosts.count == 1 ? "" : "s")?")
-        }
-        .alert("Save Changes", isPresented: $showSaveConfirmation) {
-            Button("Save") { viewModel.saveChanges() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Save all changes to \(viewModel.fileName)?")
-        }
-        .alert("Discard Changes", isPresented: $showDiscardConfirmation) {
-            Button("Discard", role: .destructive) { viewModel.discardChanges() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("All unsaved changes will be lost.")
-        }
-        .alert("Restore Backup", isPresented: $showRestoreConfirmation) {
-            Button("Restore", role: .destructive) { viewModel.restoreFromBackup() }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This will replace the current file with the last saved backup. Unsaved changes will be lost.")
-        }
-        .alert("Unsaved Changes", isPresented: $showBackConfirmation) {
-            Button("Save & Go Back") {
-                viewModel.saveChanges()
-                onBack()
-            }
-            Button("Discard & Go Back", role: .destructive) {
-                viewModel.discardChanges()
-                onBack()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("You have unsaved changes. What would you like to do?")
-        }
-        .onChange(of: showFilePicker) { _, show in
-            if show {
-                showFilePicker = false
-                DispatchQueue.main.async { openFilePicker() }
-            }
-        }
-        .sheet(isPresented: $viewModel.showTestResults) {
-            KnownHostTestResultsView(
-                results: viewModel.testResults,
-                skippedCount: viewModel.testSkippedCount,
-                isTesting: viewModel.isTesting,
-                onDismiss: { viewModel.showTestResults = false },
-                onRemoveHosts: { ids in
-                    viewModel.removeHostsByIDs(ids)
-                }
-            )
-        }
-        .alert("Import Complete", isPresented: Binding(
-            get: { importedCount != nil },
-            set: { if !$0 { importedCount = nil } }
-        )) {
-            Button("OK") { importedCount = nil }
-        } message: {
-            Text("\(importedCount ?? 0) new host\(importedCount == 1 ? "" : "s") imported.")
-        }
-        .onChange(of: showImportPicker) { _, show in
-            if show {
-                showImportPicker = false
-                DispatchQueue.main.async { openImportPicker() }
-            }
-        }
+        .modifier(KnownHostsAlerts(
+            viewModel: viewModel,
+            hostToDelete: $hostToDelete,
+            showDeleteConfirmation: $showDeleteConfirmation,
+            showBulkDeleteConfirmation: $showBulkDeleteConfirmation,
+            selectedHosts: $selectedHosts,
+            selectionMode: $selectionMode,
+            showSaveConfirmation: $showSaveConfirmation,
+            showDiscardConfirmation: $showDiscardConfirmation,
+            showRestoreConfirmation: $showRestoreConfirmation,
+            showBackConfirmation: $showBackConfirmation,
+            showFilePicker: $showFilePicker,
+            showImportPicker: $showImportPicker,
+            importedCount: $importedCount,
+            onBack: onBack,
+            openFilePicker: openFilePicker,
+            openImportPicker: openImportPicker
+        ))
     }
 
     var noFileState: some View {
@@ -480,5 +411,189 @@ struct KnownHostsContentView: View {
         if panel.runModal() == .OK, let url = panel.url {
             viewModel.selectFile(url: url)
         }
+    }
+}
+
+// Split out to avoid type-checker timeout in content (Xcode 26.3)
+private struct KnownHostsAlerts: ViewModifier {
+    @ObservedObject var viewModel: KnownHostsViewModel
+    @Binding var hostToDelete: KnownHost?
+    @Binding var showDeleteConfirmation: Bool
+    @Binding var showBulkDeleteConfirmation: Bool
+    @Binding var selectedHosts: Set<UUID>
+    @Binding var selectionMode: Bool
+    @Binding var showSaveConfirmation: Bool
+    @Binding var showDiscardConfirmation: Bool
+    @Binding var showRestoreConfirmation: Bool
+    @Binding var showBackConfirmation: Bool
+    @Binding var showFilePicker: Bool
+    @Binding var showImportPicker: Bool
+    @Binding var importedCount: Int?
+    var onBack: () -> Void
+    var openFilePicker: () -> Void
+    var openImportPicker: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .modifier(KnownHostsDeleteAlerts(
+                viewModel: viewModel,
+                hostToDelete: $hostToDelete,
+                showDeleteConfirmation: $showDeleteConfirmation,
+                showBulkDeleteConfirmation: $showBulkDeleteConfirmation,
+                selectedHosts: $selectedHosts,
+                selectionMode: $selectionMode
+            ))
+            .modifier(KnownHostsFileAlerts(
+                viewModel: viewModel,
+                showSaveConfirmation: $showSaveConfirmation,
+                showDiscardConfirmation: $showDiscardConfirmation,
+                showRestoreConfirmation: $showRestoreConfirmation,
+                showBackConfirmation: $showBackConfirmation,
+                showFilePicker: $showFilePicker,
+                showImportPicker: $showImportPicker,
+                importedCount: $importedCount,
+                onBack: onBack,
+                openFilePicker: openFilePicker,
+                openImportPicker: openImportPicker
+            ))
+    }
+}
+
+private struct KnownHostsDeleteAlerts: ViewModifier {
+    @ObservedObject var viewModel: KnownHostsViewModel
+    @Binding var hostToDelete: KnownHost?
+    @Binding var showDeleteConfirmation: Bool
+    @Binding var showBulkDeleteConfirmation: Bool
+    @Binding var selectedHosts: Set<UUID>
+    @Binding var selectionMode: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .alert("Error", isPresented: $viewModel.showError) {
+                Button("OK") {}
+            } message: {
+                Text(viewModel.errorMessage ?? "An unknown error occurred.")
+            }
+            .alert("Remove Host", isPresented: $showDeleteConfirmation) {
+                Button("Remove", role: .destructive) {
+                    if let host = hostToDelete {
+                        viewModel.deleteHost(host)
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to remove '\(hostToDelete?.displayName ?? "")'?")
+            }
+            .alert("Remove Selected", isPresented: $showBulkDeleteConfirmation) {
+                Button("Remove \(selectedHosts.count)", role: .destructive) {
+                    viewModel.bulkDelete(selectedHosts)
+                    selectedHosts.removeAll()
+                    selectionMode = false
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to remove \(selectedHosts.count) known host\(selectedHosts.count == 1 ? "" : "s")?")
+            }
+    }
+}
+
+private struct KnownHostsFileAlerts: ViewModifier {
+    @ObservedObject var viewModel: KnownHostsViewModel
+    @Binding var showSaveConfirmation: Bool
+    @Binding var showDiscardConfirmation: Bool
+    @Binding var showRestoreConfirmation: Bool
+    @Binding var showBackConfirmation: Bool
+    @Binding var showFilePicker: Bool
+    @Binding var showImportPicker: Bool
+    @Binding var importedCount: Int?
+    var onBack: () -> Void
+    var openFilePicker: () -> Void
+    var openImportPicker: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .alert("Save Changes", isPresented: $showSaveConfirmation) {
+                Button("Save") { viewModel.saveChanges() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Save all changes to \(viewModel.fileName)?")
+            }
+            .alert("Discard Changes", isPresented: $showDiscardConfirmation) {
+                Button("Discard", role: .destructive) { viewModel.discardChanges() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("All unsaved changes will be lost.")
+            }
+            .alert("Restore Backup", isPresented: $showRestoreConfirmation) {
+                Button("Restore", role: .destructive) { viewModel.restoreFromBackup() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will replace the current file with the last saved backup. Unsaved changes will be lost.")
+            }
+            .alert("Unsaved Changes", isPresented: $showBackConfirmation) {
+                Button("Save & Go Back") {
+                    viewModel.saveChanges()
+                    onBack()
+                }
+                Button("Discard & Go Back", role: .destructive) {
+                    viewModel.discardChanges()
+                    onBack()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("You have unsaved changes. What would you like to do?")
+            }
+            .modifier(KnownHostsImportSheet(
+                viewModel: viewModel,
+                showFilePicker: $showFilePicker,
+                showImportPicker: $showImportPicker,
+                importedCount: $importedCount,
+                openFilePicker: openFilePicker,
+                openImportPicker: openImportPicker
+            ))
+    }
+}
+
+private struct KnownHostsImportSheet: ViewModifier {
+    @ObservedObject var viewModel: KnownHostsViewModel
+    @Binding var showFilePicker: Bool
+    @Binding var showImportPicker: Bool
+    @Binding var importedCount: Int?
+    var openFilePicker: () -> Void
+    var openImportPicker: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: showFilePicker) { _, show in
+                if show {
+                    showFilePicker = false
+                    DispatchQueue.main.async { openFilePicker() }
+                }
+            }
+            .sheet(isPresented: $viewModel.showTestResults) {
+                KnownHostTestResultsView(
+                    results: viewModel.testResults,
+                    skippedCount: viewModel.testSkippedCount,
+                    isTesting: viewModel.isTesting,
+                    onDismiss: { viewModel.showTestResults = false },
+                    onRemoveHosts: { ids in
+                        viewModel.removeHostsByIDs(ids)
+                    }
+                )
+            }
+            .alert("Import Complete", isPresented: Binding(
+                get: { importedCount != nil },
+                set: { if !$0 { importedCount = nil } }
+            )) {
+                Button("OK") { importedCount = nil }
+            } message: {
+                Text("\(importedCount ?? 0) new host\(importedCount == 1 ? "" : "s") imported.")
+            }
+            .onChange(of: showImportPicker) { _, show in
+                if show {
+                    showImportPicker = false
+                    DispatchQueue.main.async { openImportPicker() }
+                }
+            }
     }
 }
