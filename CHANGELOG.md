@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/zackwag/DotBuddy/compare/v2.9.0...v2.9.1) (2026-11-23)
+
+
+### Bug Fixes
+
+* **ci:** update runner from macos-14 to macos-15 ([#38](https://github.com/zackwag/DotBuddy/issues/38)) ([4ba2adb](https://github.com/zackwag/DotBuddy/commit/4ba2adbf4d55206c88b2e7e3c8c03ff73d554cdd))
+
 ## [2.9.0](https://github.com/zackwag/DotBuddy/compare/v2.8.1...v2.9.0) (2026-11-18)
 
 
