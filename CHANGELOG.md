@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.2](https://github.com/zackwag/DotBuddy/compare/v2.9.1...v2.9.2) (2026-11-23)
+
+
+### Bug Fixes
+
+* break up KnownHostsContentView to fix type-checker timeout ([#40](https://github.com/zackwag/DotBuddy/issues/40)) ([caee93e](https://github.com/zackwag/DotBuddy/commit/caee93e05cd8d2787d5bcbb0388892463f319dab))
+
 ## [2.9.1](https://github.com/zackwag/DotBuddy/compare/v2.9.0...v2.9.1) (2026-11-23)
 
 
